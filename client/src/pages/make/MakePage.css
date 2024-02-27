@@ -1,27 +1,77 @@
+.outerLayout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-.outerLayout{
-    position: fixed; /* 추가 */
-    width: 100vw;
-    height: calc(var(--vh,1vh)*100);
+.inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.question {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 10px 5px;
+}
+
+.question input{
+    width: 300px;
+    height: 30px;
+    margin-left: 5px;
+    border: none;
+    color:black;
+    font-weight: 700;
+    background-color: rgb(190, 187, 187);
+    padding: 0 0 0 5px;
+}
+
+
+.all-answers{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: whitesmoke;
+    border-top: 1.5px solid grey;
+    border-bottom: 1.5px solid grey;
+    margin-bottom: 20px;
+    padding-left: 100px;
+}
+
+.all-numbers{
+    margin: 0 10px 0 0;
+}
+
+
+.answers,
+.imageUpload {
     margin: 0 0 0 0;
-    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.answers input{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.imageUpload input {
+    margin-top: 9px;
+    margin-bottom: 9px;
+}
+
+.button{
+    width: 200px;
+    height: 40px;
+    font-size: 18px;
     display: block;
-    text-align: center;
-    
-
-}
-
-
-.inner{
-    text-align: center;
-}
-
-.title{
-    width: 270px;
-    height: 70px;
-    font-size: 40px;
-    border: 1px solid black;
-    line-height : 70px;
-    text-align: center;
-    display: inline-block;
+    margin-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+    background-color: gainsboro;
+    border: 3px solid black;
 }

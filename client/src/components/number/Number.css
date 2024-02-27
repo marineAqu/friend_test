@@ -1,0 +1,27 @@
+/* Number.css */
+
+.number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.number .up,
+.number .down {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.number svg {
+    margin: 5px;
+    font-size: 2em;
+    cursor: pointer;
+}
+
+.number svg:active {
+    transform: scale(1.1);
+}
+
