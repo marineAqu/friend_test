@@ -2,9 +2,9 @@
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import './App.css';
-import MainMakePage from "./pages/MainMakePage";
-import MakePage from "./pages/MakePage";
-import SharePage from "./pages/SharePage";
+import MainMakePage from "./pages/make/MainMakePage.jsx";
+import MakePage from "./pages/make/MakePage.jsx";
+import SharePage from "./pages/make/SharePage.jsx";
 
 
 
