@@ -6,6 +6,8 @@ import ShareLinkButton from '../../components/button/ShareLinkButton.jsx'; // �
 import Header from '../../components/header/Header';
 import './SharePage.css';
 
+
+//TODO: 닉네임 get하는 api
 const SharePage = () => {
   const navigate = useNavigate();
 

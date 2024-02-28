@@ -16,8 +16,8 @@ function App() {
         <BrowserRouter basename="/friend_test">
             <Routes>
                 <Route path="/main/make" element={<MainMakePage/>}></Route>
-                <Route path="/make" element={<MakePage/>}></Route>
-                <Route path="/share" element={<SharePage/>}></Route>
+                <Route path="/make/:name" element={<MakePage/>}></Route>
+                <Route path="/share/:quiz-id" element={<SharePage/>}></Route>
 
                 {/* <Route path="/main/test" element={<MainTestPage/>}></Route>
                 <Route path="/test" element={<TestPage/>}></Route>

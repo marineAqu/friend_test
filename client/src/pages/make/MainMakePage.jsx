@@ -21,7 +21,7 @@ const MainMakePage = () =>{
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    navigate("/make?name="+name);
+    navigate(`/make/${name}`);
   }
 
   const setVh = () => {
