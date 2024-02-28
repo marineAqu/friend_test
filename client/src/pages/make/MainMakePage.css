@@ -23,12 +23,16 @@ body{
 
 }
 
+.innerLine{
+  display: block;
+}
+
 @media (min-width: 1000px) {
     .innerLine {
       width: 600px;
       height: calc(var(--vh,1vh)*100);
-      margin: 0 auto;
       border: 1px solid black;
+      text-align: center;
     }
   }
   
@@ -41,6 +45,7 @@ body{
     line-height : 70px;
     text-align: center;
     display: inline-block;
+    margin: 0 auto;
 }
 
 .description{

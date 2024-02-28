@@ -1,0 +1,33 @@
+/* ShareLinkButton.css */
+
+.share-link {
+    width: 340px;
+    height: 48px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    border-radius: 0;
+    text-align: center;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 100;
+    background-color: white;
+    line-height: 48px;
+  }
+  
+  .copy-link {
+    width: 340px;
+    height: 48px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 100;
+    color: azure;
+    font-weight: 400;
+    border: none;
+    background-color: rgb(83, 138, 231);
+  }
+  
