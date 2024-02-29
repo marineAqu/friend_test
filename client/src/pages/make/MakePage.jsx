@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../../components/header/Header';
 import Number from '../../components/number/Number';
@@ -8,6 +8,23 @@ import './MakePage.css';
 
 
 const MakePage = () => {
+    const setVh = () => {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    useEffect(() => {
+
+        setVh();
+
+        function onResize() {
+            setVh()
+        }
+
+        window.addEventListener('resize', onResize);
+    }, [])
+
+
     /* param으로 name 받아놓음 */
     const { name } = useParams();
 
@@ -124,13 +141,15 @@ const MakePage = () => {
             <div className="inner">
 
                 <form>
-                    <input
-                        type="text"
-                        name="questionDetail"
-                        value={quizList[page].questionDetail}
-                        onChange={handleInputChange}
-                        placeholder="질문을 입력하세요"
-                    />
+                    <div className='question-container'>
+                        <input
+                            type="text"
+                            name="questionDetail"
+                            value={quizList[page].questionDetail}
+                            onChange={handleInputChange}
+                            placeholder="질문을 입력하세요"
+                        />
+                    </div>
 
                     <div className='get-correctNo'>
                         <input type="radio" id="answer1" name="correctNo" value="1" onChange={() => handleCorrectNoChange(1)} />
@@ -143,32 +162,34 @@ const MakePage = () => {
                         <label htmlFor="answer4">4</label>
                         <input type="radio" id="answer5" name="correctNo" value="5" onChange={() => handleCorrectNoChange(5)} />
                         <label htmlFor="answer5">5</label>
-
                     </div>
-                    {quizList[page].answers.map((answer, index) => (
-                        <input
-                            key={index}
-                            type="text"
-                            name={`answer${index}`}
-                            value={answer}
-                            onChange={handleAnswerChange}
-                            placeholder={`답변 ${index + 1}`}
-                        />
-                    ))}
 
-                    {quizList[page].images.map((image, index) => (
-                        <input
-                            key={index}
-                            type="file"
-                            onChange={(event) => handleFileInputChange(event, index)}
-                        />
-                    ))}
-                    <button type="button" onClick={handleNextPage}>{page < 9 ? '다음' : '완료'}</button>
+                    <div className="answer-container">
+                        {quizList[page].answers.map((answer, index) => (
+                            <input
+                                key={index}
+                                type="text"
+                                name={`answer${index}`}
+                                value={answer}
+                                onChange={handleAnswerChange}
+                                placeholder={`답변 ${index + 1}`}
+                            />
+                        ))}
+                    </div>
+                    <div className="image-container">
+                        {quizList[page].images.map((image, index) => (
+                            <input
+                                key={index}
+                                type="file"
+                                onChange={(event) => handleFileInputChange(event, index)}
+                            />
+                        ))}
+                    </div>
+
                 </form>
-
-                <button >자동생성</button>
-
             </div>
+            <button type="button" onClick={handleNextPage}>{page < 9 ? '다음' : '완료'}</button>
+            <button >자동생성</button>
         </div>
     );
 };
