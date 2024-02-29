@@ -21,8 +21,18 @@ const MainMakePage = () =>{
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    navigate(`/make/${name}`);
+    
+    //만약 이미 퀴즈를 만들지 않았다면
+    if (!localStorage.getItem('userId')) {
+      navigate(`/make/${name}`);
+    }
+    //이미 이전에 퀴즈를 만들었다면
+    else{
+      alert("이미 생성한 퀴즈가 있습니다.");
+    }
+    
   }
+  
 
   const setVh = () => {
       const vh = window.innerHeight * 0.01;
