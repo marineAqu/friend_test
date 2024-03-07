@@ -116,7 +116,7 @@ const MakePage = () => {
                 });
             });
 
-            const response = await fetch('/backEndProc', {
+            const response = await fetch('/saveMadeQuiz', {
                 method: 'POST',
                 body: formData,
             });
