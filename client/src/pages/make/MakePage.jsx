@@ -97,7 +97,7 @@ const MakePage = () => {
             setQuizList(updatedQuizList);
         } else {
             // 원래 handleSubmit 다음 handlePush 순서임
-            // handleSubmit();
+            handleSubmit();
             console.log(quizList);
             handlePush();
         }
@@ -116,7 +116,7 @@ const MakePage = () => {
                 });
             });
 
-            const response = await fetch('BACKENDAPIURL', {
+            const response = await fetch('/backEndProc', {
                 method: 'POST',
                 body: formData,
             });
