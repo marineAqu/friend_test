@@ -96,7 +96,10 @@ const MakePage = () => {
             updatedQuizList[page].questionNo = page + 1;
             setQuizList(updatedQuizList);
         } else {
-            // 원래 handleSubmit 다음 handlePush 순서임
+            // no 설정을 해주지 않아서 1로 삽입되었음
+            const updatedQuizList = [...quizList];
+            updatedQuizList[page].questionNo = page + 1;
+            setQuizList(updatedQuizList);
             handleSubmit();
             console.log(quizList);
             handlePush();
