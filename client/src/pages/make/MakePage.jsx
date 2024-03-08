@@ -33,6 +33,7 @@ const MakePage = () => {
 
 
 
+
     /* 페이지, 퀴즈 폼 정의. page는 0~9 */
     const [page, setPage] = useState(0);
     const [quizList, setQuizList] = useState(Array.from({ length: 10 }, () => ({
@@ -155,16 +156,17 @@ const MakePage = () => {
                     </div>
 
                     <div className='get-correctNo'>
-                        <input type="radio" id="answer1" name="correctNo" value="1" onChange={() => handleCorrectNoChange(1)} />
-                        <label htmlFor="answer1">1</label>
-                        <input type="radio" id="answer2" name="correctNo" value="2" onChange={() => handleCorrectNoChange(2)} />
-                        <label htmlFor="answer2">2</label>
-                        <input type="radio" id="answer3" name="correctNo" value="3" onChange={() => handleCorrectNoChange(3)} />
-                        <label htmlFor="answer3">3</label>
-                        <input type="radio" id="answer4" name="correctNo" value="4" onChange={() => handleCorrectNoChange(4)} />
-                        <label htmlFor="answer4">4</label>
-                        <input type="radio" id="answer5" name="correctNo" value="5" onChange={() => handleCorrectNoChange(5)} />
-                        <label htmlFor="answer5">5</label>
+                        {[1, 2, 3, 4, 5].map(option => (
+                            <React.Fragment key={option}>
+                                <input type="radio"
+                                id={`corr${option}`}
+                                name="correctNo"
+                                value={option}
+                                onChange={() => handleCorrectNoChange(option)}
+                                />
+                                <label htmlFor={`corr${option}`}>{option}</label>
+                            </React.Fragment>
+                        ))}
                     </div>
 
                     <div className="answer-container">
