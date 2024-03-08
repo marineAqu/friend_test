@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import DefaultButton from '../../components/button/DefaultButton';
 import Header from '../../components/header/Header';
 import Number from '../../components/number/Number';
 
-
+import ImagePreview from '../../components/imagepreview/ImagePreview';
 import './MakePage.css';
 
 
@@ -39,7 +40,7 @@ const MakePage = () => {
     const [quizList, setQuizList] = useState(Array.from({ length: 10 }, () => ({
         questionDetail: '',
         questionNo: page + 1,
-        correctNo: 0,
+        correctNo: 1,
         answers: ['', '', '', '', ''],
         images: [null, null, null, null, null]
     })));
@@ -69,10 +70,22 @@ const MakePage = () => {
 
 
     const handleFileInputChange = (event, index) => {
-        const file = event.target.files[0]; // 첫번쨰로 선택한 파일 들어가는거임
-        const updatedQuizList = [...quizList];
-        updatedQuizList[page].images[index] = file;
-        setQuizList(updatedQuizList);
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = () => {
+            const imageUrl = reader.result;
+            const updatedQuizList = [...quizList];
+            updatedQuizList[page].images[index] = {
+                file: file,
+                imageUrl: imageUrl
+            };
+            setQuizList(updatedQuizList);
+        };
+        
+        if (file) {
+            reader.readAsDataURL(file);
+        }
     };
 
     const handleCorrectNoChange = (correctNo) => {
@@ -140,12 +153,13 @@ const MakePage = () => {
 
     return (
         <div className="outerLayout">
-            <Header />
-            <Number page={page + 1} />
+            <Header className="header"/>
+            <Number page={page + 1} className="number" />
             <div className="inner">
 
                 <form>
                     <div className='question-container'>
+                        <h3> {page+1}. </h3>
                         <input
                             type="text"
                             name="questionDetail"
@@ -183,18 +197,24 @@ const MakePage = () => {
                     </div>
                     <div className="image-container">
                         {quizList[page].images.map((image, index) => (
-                            <input
-                                key={index}
-                                type="file"
-                                onChange={(event) => handleFileInputChange(event, index)}
-                            />
+                            <div key={index}>
+                                <ImagePreview imageUrl={image ? image.imageUrl : null} />
+                                <label htmlFor={`file-${index}`}><div class="btn-upload">이미지 업로드</div></label>
+                                <input
+                                    type="file"
+                                    id={`file-${index}`}
+                                    onChange={(event) => handleFileInputChange(event, index)}
+                                />
+                            </div>
                         ))}
                     </div>
 
                 </form>
+                <div className='bottom'>
+                    <DefaultButton text={page < 9 ? '다음' : '완료'} onClick={handleNextPage} variant={page < 9 ? 'normal' : 'grey'}/>
+                    <DefaultButton text="자동생성" variant='blue' />
+                </div>
             </div>
-            <button type="button" onClick={handleNextPage}>{page < 9 ? '다음' : '완료'}</button>
-            <button >자동생성</button>
         </div>
     );
 };
