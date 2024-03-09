@@ -1,11 +1,13 @@
 /* Number.css */
 
 .number {
+    position: fixed;
+    top: 0px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-top: 20px;
+    margin-top: 80px;
 }
 
 .number .up,
@@ -16,8 +18,9 @@
 }
 
 .number svg {
-    margin: 5px;
-    font-size: 2em;
+    width: 25px; /* 이미지 크기 조정 */
+    height: 25px; /* 이미지 크기 조정 */
+    margin: 3px 3px; /* 이미지 간격 조정 */
     cursor: pointer;
 }
 

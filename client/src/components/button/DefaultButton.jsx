@@ -1,37 +1,5 @@
-import React from 'react';
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-
-function DefaultButton({text}) {
-    const variantStyle = VARIANTS[variant];
-
-
-    return (
-        <StyledButton
-        disabled={disabled}
-        variantStyle={variantStyle}
-        >{text}</StyledButton>
-    )
-}
-
-const VARIANTS = {
-    normal: css`
-        --button-color: black;
-        --button-bg-color: gainsboro;
-        --button-hover-bg-color: grey;
-        --button-border: 1px solid black;
-    `,
-    grey: css`
-        --button-color: #ffffff;
-        --button-bg-color: grey;
-        --button-hover-bg-color: grey;
-    `,
-    blue: css`
-        --button-color: #ffffff;
-        --button-bg-color: blue;
-        --button-hover-bg-color: #grey;
-    `,
-    };
 
 const StyledButton = styled.button`
     ${(p) => p.variantStyle}
@@ -39,10 +7,13 @@ const StyledButton = styled.button`
     
     width: 240px;
     height: 48px;
-    font-size: 24px;
+    font-size: 22px;
     display: block;
     margin:0;
     cursor: pointer;
+    color: var(--button-color);
+    font-weight: 400;
+    border: var(--button-border);
     border-radius: 10px;
 
     &:active,
@@ -51,12 +22,51 @@ const StyledButton = styled.button`
     background: var(--button-hover-bg-color, #025ce2);
     }
 
+    &:not(:disabled) {
+        background-color: var(--button-bg-color);
+    }
+
     &:disabled {
     cursor: default;
     opacity: 0.5;
     background: var(--button-bg-color, #025ce2);
     }
 `;
+
+function DefaultButton({ text, onClick, variant, disabled }) {
+    const variantStyle = VARIANTS[variant];
+
+
+    return (
+        <StyledButton
+            onClick={onClick}
+            disabled={disabled}
+            variantStyle={variantStyle}
+        >{text}</StyledButton>
+    );
+}
+
+const VARIANTS = {
+    normal: css`
+      --button-color: black;
+      --button-bg-color: gainsboro;
+      --button-hover-bg-color: #b0b0b0;
+      --button-border: 1px solid black;
+    `,
+    grey: css`
+      --button-color: #ffffff;
+      --button-bg-color: #808080;
+      --button-hover-bg-color: #a9a9a9;
+      --button-border: 1px solid black;
+    `,
+    blue: css`
+      --button-color: azure;
+      --button-bg-color: rgb(83, 138, 231);
+      --button-hover-bg-color: #708090;
+      --button-border: none;
+    `,
+};
+
 
 // App.js에서 import 하기위해 해당 코드를 추가한다.
 export default DefaultButton;
