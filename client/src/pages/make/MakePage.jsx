@@ -35,6 +35,8 @@ const MakePage = () => {
 
 
 
+
+
     /* 페이지, 퀴즈 폼 정의. page는 0~9 */
     const [page, setPage] = useState(0);
     const [quizList, setQuizList] = useState(Array.from({ length: 10 }, () => ({
@@ -109,6 +111,10 @@ const MakePage = () => {
             const updatedQuizList = [...quizList];
             updatedQuizList[page].questionNo = page + 1;
             setQuizList(updatedQuizList);
+
+             // 선택된 라디오 버튼의 상태 초기화
+            const radioButtons = document.getElementsByName('correctNo');
+            radioButtons.forEach(button => button.checked = false);
         } else {
             // no 설정을 해주지 않아서 1로 삽입되었음
             const updatedQuizList = [...quizList];
