@@ -71,23 +71,23 @@ const MakePage = () => {
     };
 
 
-    const handleFileInputChange = (event, index) => {
+    const handleFileInputChange = (event, index, currentPage) => {
         const file = event.target.files[0];
-        const reader = new FileReader();
+        if(file){
+            const reader = new FileReader();
         
-        reader.onload = () => {
-            const imageUrl = reader.result;
-            const updatedQuizList = [...quizList];
-            updatedQuizList[page].images[index] = {
-                file: file,
-                imageUrl: imageUrl
+            reader.onload = () => {
+                const imageUrl = reader.result;
+                const updatedQuizList = [...quizList];
+                updatedQuizList[currentPage].images[index] = {
+                    file: file,
+                    imageUrl: imageUrl
+                };
+                setQuizList(updatedQuizList);
             };
-            setQuizList(updatedQuizList);
-        };
-        
-        if (file) {
             reader.readAsDataURL(file);
         }
+
     };
 
     const handleCorrectNoChange = (correctNo) => {
@@ -115,6 +115,8 @@ const MakePage = () => {
              // 선택된 라디오 버튼의 상태 초기화
             const radioButtons = document.getElementsByName('correctNo');
             radioButtons.forEach(button => button.checked = false);
+
+            
         } else {
             // no 설정을 해주지 않아서 1로 삽입되었음
             const updatedQuizList = [...quizList];
@@ -209,7 +211,8 @@ const MakePage = () => {
                                 <input
                                     type="file"
                                     id={`file-${index}`}
-                                    onChange={(event) => handleFileInputChange(event, index)}
+                                    key={`file-${index}-${page}`}
+                                    onChange={(event) => handleFileInputChange(event, index, page)}
                                 />
                             </div>
                         ))}
