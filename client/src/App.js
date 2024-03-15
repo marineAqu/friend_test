@@ -5,6 +5,10 @@ import './App.css';
 import MainMakePage from "./pages/make/MainMakePage.jsx";
 import MakePage from "./pages/make/MakePage.jsx";
 import SharePage from "./pages/make/SharePage.jsx";
+import MainTestPage from "./pages/quiz/MainTestPage.jsx";
+import ScorePage from "./pages/quiz/ScorePage.jsx";
+import TestPage from "./pages/quiz/TestPage.jsx";
+
 
 
 
@@ -19,11 +23,11 @@ function App() {
                 <Route path="/make/:name" element={<MakePage/>}></Route>
                 <Route path="/share/:quiz-id" element={<SharePage/>}></Route>
 
-                {/* <Route path="/main/test" element={<MainTestPage/>}></Route>
+                <Route path="/main/test" element={<MainTestPage/>}></Route>
                 <Route path="/test" element={<TestPage/>}></Route>
                 <Route path="/score" element={<ScorePage/>}></Route>
-                <Route path="/score-detail" element={<ScorePage/>}></Route>
 
+                {/* <Route path="/score-detail" element={<ScorePage/>}></Route>
                 <Route path="/*" element={<Notfound />}></Route> */}
             </Routes>
         </BrowserRouter>

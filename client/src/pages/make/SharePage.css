@@ -1,13 +1,7 @@
 
-@font-face {
-    font-family: 'seoul';
-    src: url('../../assets/fonts/seoulS.TTF') format('truetype');
-  }
-  
   
   body{
     background-image: url('../../assets/images/paper-texture.png');
-    font-family: 'seoul';
     
   }
   

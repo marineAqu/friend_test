@@ -1,0 +1,10 @@
+body{
+    overflow: hidden;
+}
+
+.mainInner{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+

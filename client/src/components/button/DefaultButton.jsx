@@ -2,12 +2,12 @@ import styled, { css } from "styled-components";
 
 
 const StyledButton = styled.button`
-    ${(p) => p.variantStyle}
+    ${({ variantStyle }) => variantStyle}
 
-    
+    font-family: 'seoul-m';
     width: 240px;
     height: 48px;
-    font-size: 22px;
+    font-size: 24px;
     display: block;
     margin:0;
     cursor: pointer;
@@ -33,6 +33,7 @@ const StyledButton = styled.button`
     }
 `;
 
+
 function DefaultButton({ text, onClick, variant, disabled }) {
     const variantStyle = VARIANTS[variant];
 
@@ -47,26 +48,25 @@ function DefaultButton({ text, onClick, variant, disabled }) {
 }
 
 const VARIANTS = {
-    normal: css`
-      --button-color: black;
-      --button-bg-color: gainsboro;
-      --button-hover-bg-color: #b0b0b0;
-      --button-border: 1px solid black;
-    `,
-    grey: css`
-      --button-color: #ffffff;
-      --button-bg-color: #808080;
-      --button-hover-bg-color: #a9a9a9;
-      --button-border: 1px solid black;
-    `,
-    blue: css`
-      --button-color: azure;
-      --button-bg-color: rgb(83, 138, 231);
-      --button-hover-bg-color: #708090;
-      --button-border: none;
-    `,
+  normal: css`
+    --button-color: black;
+    --button-bg-color: gainsboro;
+    --button-hover-bg-color: #b0b0b0; /* hover 시 배경색 변수 추가 */
+    --button-border: 1px solid black;
+  `,
+  grey: css`
+    --button-color: #ffffff;
+    --button-bg-color: #808080;
+    --button-hover-bg-color: #a9a9a9; /* hover 시 배경색 변수 추가 */
+    --button-border: 1px solid black;
+  `,
+  blue: css`
+    --button-color: azure;
+    --button-bg-color: rgb(83, 138, 231);
+    --button-hover-bg-color: #708090; /* hover 시 배경색 변수 추가 */
+    --button-border: none;
+  `,
 };
 
 
-// App.js에서 import 하기위해 해당 코드를 추가한다.
 export default DefaultButton;
