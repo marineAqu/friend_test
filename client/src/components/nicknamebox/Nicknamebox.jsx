@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import SetVhComponent from "../vh/SetVhComponent";
 
 const StyledNickname = styled.div`
     font-family: 'seoul-m';
@@ -8,7 +9,7 @@ const StyledNickname = styled.div`
     padding: 0px 15px;
     height: 60px;
     font-size: 30px;
-    margin: 10px auto 40px auto;
+    margin: 10px auto 10px auto;
     border-radius: 10px;
     line-height : 62px;
     border: 1.5px solid grey;
@@ -19,16 +20,17 @@ const StyledNickname = styled.div`
     text-overflow: ellipsis; /* 넘친 텍스트를 ...으로 표시 */
     white-space: nowrap; /* 텍스트를 한 줄에 표시 */
 
-    margin-bottom: -10px;
+    margin-bottom: -20px;
 `;
 
 const MarginBox = styled.div`
-    margin-bottom: 40px;
+    margin-bottom: 0px;
 `;
 
 function Nicknamebox ({nickname}) {
     return(
         <MarginBox>
+            <SetVhComponent />
             <StyledNickname> {nickname} </StyledNickname>
             <h3>영역</h3>
         </MarginBox>

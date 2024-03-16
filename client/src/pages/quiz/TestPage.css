@@ -1,0 +1,31 @@
+.quizList{
+    display: flex;
+    flex-direction: column;
+    height: calc(var(--vh,1vh)*100);
+}
+
+.quizLayout{
+    margin: 0 auto;
+    display: flex;
+    width: 100vw;
+    max-width: 500px;
+    background-color: rgb(202, 202, 202);
+    padding: 5px 0px 7px 0;
+    margin-top: 20px;
+    font-size: 20px;
+    color: black;
+    justify-content: center;
+    font-family: 'seoulM';
+}
+
+.answerLayout{
+    display: flex;
+    max-width: 600px;
+    padding: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.answerLayout > * {
+    margin: 5px; /* TestBlock 컴포넌트들 사이의 간격을 없애기 위한 설정 */
+}

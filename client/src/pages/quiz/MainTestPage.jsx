@@ -1,5 +1,5 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import Background from "../../components/background/Background";
 import DefaultButton from '../../components/button/DefaultButton';
 import Header from '../../components/header/Header';
@@ -8,13 +8,29 @@ import "./MainTestPage.css";
 
 const MainTestPage = () => {
 
+    //temp
+    const quizname = "신스언니";
+
+    const [username, setUsername] = useState("");
+
     const navigate = useNavigate(); //navigate
 
-    const handleSubmit= (event) => {
-        navigate(`/test/${name}`);
+    const { quizID } = useParams(); //param에서 ID 받기
+
+    const handleChange = (event) => {
+        setUsername(event.target.value);
     }
 
-    const name = "신스언니";
+    const handleSubmit = () => {
+        if (username.trim() !== "") {
+            const a = document.getElementById('username').value;
+            navigate(`/test/${quizID}?name=` + a);
+        } else {
+            alert("제출자 이름을 입력해주세요");
+        }
+    }
+    
+
 
     return (
         <Background>
@@ -27,10 +43,11 @@ const MainTestPage = () => {
                 <h4>얼마나 알고 있을까?</h4>
                 </div>
 
-                <Nicknamebox nickname = {name}></Nicknamebox>
-                <DefaultButton text="퀴즈 맞추기!" variant='normal' onClick={handleSubmit} />
+                <Nicknamebox nickname = {quizname}></Nicknamebox>
 
-                
+                <input id="username" name="name" type="text" value={username} onChange={handleChange}
+                placeholder='제출자 이름을 입력해주세요' maxLength={20} required/>
+                <DefaultButton text="퀴즈 맞추기!" variant='normal' onClick={handleSubmit} />
             </div>
         </Background>
     );

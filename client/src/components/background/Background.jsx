@@ -19,13 +19,20 @@ const BackgroundImage = styled.body`
     text-align: center;
     justify-content: center;
     align-items: center;
+
 `;
 
 const InnerBox = styled.div`
 
     height: calc(var(--vh,1vh)*100);
-    padding-top: calc(var(--vh,1vh)*30);
+    padding-top: calc(var(--vh,1vh)*15);
     text-align: center;
+    overflow-y: auto;
+    scrollbar-width: none;
+
+    @media (max-width: 380px) {
+        padding-top: 0;
+    }
 
     @media (min-width: 1000px) {
         width: 600px;
