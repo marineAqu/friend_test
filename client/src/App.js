@@ -21,11 +21,11 @@ function App() {
             <Routes>
                 <Route path="/main/make" element={<MainMakePage/>}></Route>
                 <Route path="/make/:name" element={<MakePage/>}></Route>
-                <Route path="/share/:quiz-id" element={<SharePage/>}></Route>
+                <Route path="/share/:quizID" element={<SharePage/>}></Route>
 
-                <Route path="/main/test" element={<MainTestPage/>}></Route>
-                <Route path="/test" element={<TestPage/>}></Route>
-                <Route path="/score" element={<ScorePage/>}></Route>
+                <Route path="/main/test/:quizID" element={<MainTestPage/>}></Route>
+                <Route path="/test/:quizID" element={<TestPage/>}></Route>
+                <Route path="/score/:quizID" element={<ScorePage/>}></Route>
 
                 {/* <Route path="/score-detail" element={<ScorePage/>}></Route>
                 <Route path="/*" element={<Notfound />}></Route> */}
