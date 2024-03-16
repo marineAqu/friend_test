@@ -4,6 +4,7 @@ import DefaultButton from '../../components/button/DefaultButton';
 import Header from '../../components/header/Header';
 import Number from '../../components/number/Number';
 
+import Background from '../../components/background/Background';
 import ImagePreview from '../../components/imagepreview/ImagePreview';
 import './MakePage.css';
 
@@ -160,7 +161,7 @@ const MakePage = () => {
 
 
     return (
-        <div className="outerLayout">
+        <Background>
             <Header className="header"/>
             <Number page={page + 1} className="number" />
             <div className="inner">
@@ -219,12 +220,12 @@ const MakePage = () => {
                     </div>
 
                 </form>
-                <div className='bottom'>
+            </div>
+            <div className='bottom'>
                     <DefaultButton text={page < 9 ? '다음' : '완료'} onClick={handleNextPage} variant={page < 9 ? 'normal' : 'grey'}/>
                     <DefaultButton text="자동생성" variant='blue' />
-                </div>
             </div>
-        </div>
+        </Background>
     );
 };
 

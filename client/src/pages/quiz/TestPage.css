@@ -27,5 +27,5 @@
 }
 
 .answerLayout > * {
-    margin: 5px; /* TestBlock 컴포넌트들 사이의 간격을 없애기 위한 설정 */
+    margin: 3px; /* TestBlock 컴포넌트들 사이의 간격을 없애기 위한 설정 */
 }

@@ -5,10 +5,8 @@ import Header from '../../components/header/Header';
 import Number from '../../components/number/Number';
 import TestBlock from '../../components/testblock/Testblock';
 import SetVhComponent from '../../components/vh/SetVhComponent';
-import './TestPage.css';
 
-const TestPage = () => {
-
+const ScoreDetailPage = () => {
     const navigate = useNavigate(); //navigates
 
     const { quizId } = useParams(); // 경로
@@ -113,7 +111,5 @@ const TestPage = () => {
         </Background>
     );
 
-
-
 }
-export default TestPage;
+export default ScoreDetailPage;

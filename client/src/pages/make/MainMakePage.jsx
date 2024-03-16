@@ -1,6 +1,7 @@
 //MainMakePage.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Background from '../../components/background/Background';
 import Header from '../../components/header/Header';
 import './MainMakePage.css';
 
@@ -52,7 +53,7 @@ const MainMakePage = () =>{
 
 
   return (
-    <div className="outerLayout">
+    <Background>
       <div className="innerLine">
         <Header />
         <h4>10문제로 알아보는</h4>
@@ -69,7 +70,7 @@ const MainMakePage = () =>{
           <button className="mainButton" type="submit">퀴즈 만들기</button>
         </form>
       </div>
-    </div>
+    </Background>
   );
   };
 

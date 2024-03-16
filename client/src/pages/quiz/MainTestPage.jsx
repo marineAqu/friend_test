@@ -15,7 +15,7 @@ const MainTestPage = () => {
 
     const navigate = useNavigate(); //navigate
 
-    const { quizID } = useParams(); //param에서 ID 받기
+    const { quizId } = useParams(); //param에서 ID 받기
 
     const handleChange = (event) => {
         setUsername(event.target.value);
@@ -24,7 +24,7 @@ const MainTestPage = () => {
     const handleSubmit = () => {
         if (username.trim() !== "") {
             const a = document.getElementById('username').value;
-            navigate(`/test/${quizID}?name=` + a);
+            navigate(`/test/${quizId}?name=` + a);
         } else {
             alert("제출자 이름을 입력해주세요");
         }

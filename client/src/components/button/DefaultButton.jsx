@@ -5,9 +5,9 @@ const StyledButton = styled.button`
     ${({ variantStyle }) => variantStyle}
 
     font-family: 'seoul-m';
-    width: 240px;
+    width: 340px;
     height: 48px;
-    font-size: 24px;
+    font-size: 20px;
     display: block;
     margin:0;
     cursor: pointer;

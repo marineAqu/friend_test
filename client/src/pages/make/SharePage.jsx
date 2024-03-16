@@ -2,6 +2,8 @@
 
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Background from '../../components/background/Background.jsx';
+import DefaultButton from '../../components/button/DefaultButton';
 import ShareLinkButton from '../../components/button/ShareLinkButton.jsx'; // 수정된 부분
 import Header from '../../components/header/Header';
 import './SharePage.css';
@@ -34,17 +36,17 @@ const SharePage = () => {
   const sharelink = "http:/3000/shareplease";
 
   return (
-    <div className="outerLayout">
+    <Background>
+      <Header />
       <div className="innerLine">
-        <Header />
         <div className="title">친구 능력고사</div>
         <div className='nickname'>{nickname} 영역</div>
 
         <h2>공유하기</h2>
-        <ShareLinkButton link={sharelink} /> {/* 수정된 부분 */}
-        <button className='back-main' onClick={handlePush}>새로운 능력고사 만들러 가기</button>
+        <ShareLinkButton link={sharelink} />
+        <DefaultButton text="새로운 능력고사 만들러 가기" variant='normal' onClick={handlePush} />
       </div>
-    </div>
+    </Background>
   );
 };
 

@@ -1,31 +1,12 @@
 
   
-  body{
-    background-image: url('../../assets/images/paper-texture.png');
-    
-  }
-  
-  .outerLayout{
-    width: 100vw;
-    height: calc(var(--vh,1vh)*100);
+  .innerLine{
     margin: 0 auto;
-    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 0px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    text-align: center;
 }
-
-  
-  @media (min-width: 1000px) {
-      .innerLine {
-        width: 600px;
-        border: 1px solid black;
-        text-align: center;
-      }
-    }
-
 
   
   .title{
@@ -51,20 +32,6 @@
 
     margin-bottom: 100px;
 }
-
-
-    
-    button.mainButton {
-      width: 240px;
-      height: 48px;
-      font-size: 24px;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      border-radius: 10px;
-      background-color: gainsboro;
-      border: 3px solid black;
-    }
 
     .share-link,
     .copy-link{

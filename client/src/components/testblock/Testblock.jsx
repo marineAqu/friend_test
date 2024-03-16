@@ -4,7 +4,7 @@ const StyledTestBlock = styled.button`
     ${({ variantStyle }) => variantStyle}
 
     font-family: 'seoul-m';
-    width: 160px;
+    width: 156px;
     height: 170px;
     font-size: 18px;
     display: block;

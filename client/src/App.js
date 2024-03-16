@@ -6,6 +6,7 @@ import MainMakePage from "./pages/make/MainMakePage.jsx";
 import MakePage from "./pages/make/MakePage.jsx";
 import SharePage from "./pages/make/SharePage.jsx";
 import MainTestPage from "./pages/quiz/MainTestPage.jsx";
+import ScoreDetailPage from "./pages/quiz/ScoreDetailPage.jsx";
 import ScorePage from "./pages/quiz/ScorePage.jsx";
 import TestPage from "./pages/quiz/TestPage.jsx";
 
@@ -21,14 +22,14 @@ function App() {
             <Routes>
                 <Route path="/main/make" element={<MainMakePage/>}></Route>
                 <Route path="/make/:name" element={<MakePage/>}></Route>
-                <Route path="/share/:quizID" element={<SharePage/>}></Route>
+                <Route path="/share/:quizId" element={<SharePage/>}></Route>
 
-                <Route path="/main/test/:quizID" element={<MainTestPage/>}></Route>
-                <Route path="/test/:quizID" element={<TestPage/>}></Route>
-                <Route path="/score/:quizID" element={<ScorePage/>}></Route>
+                <Route path="/main/test/:quizId" element={<MainTestPage/>}></Route>
+                <Route path="/test/:quizId" element={<TestPage/>}></Route>
+                <Route path="/score/:answerId" element={<ScorePage/>}></Route>
 
-                {/* <Route path="/score-detail" element={<ScorePage/>}></Route>
-                <Route path="/*" element={<Notfound />}></Route> */}
+                <Route path="/score-detail/:answerId" element={<ScoreDetailPage/>}></Route>
+                <Route path="/*" element={<MainMakePage/>}></Route>
             </Routes>
         </BrowserRouter>
     )
