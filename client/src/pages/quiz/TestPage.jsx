@@ -15,7 +15,7 @@ const TestPage = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const name = searchParams.get('name'); // name 받기
-    const [answerId, setAnswerId] = useState(0);
+    const [answerNo, setAnswerNo] = useState(0);
 
     const [page, setPage] = useState(0);
     const [quizList, setQuizList] = useState(Array.from({ length: 10 }, () => ({
@@ -36,7 +36,7 @@ const TestPage = () => {
         } else {
             console.log(updateAnswerList);    //체크용
             handleSubmit();
-            navigate(`/score/${answerId}`);
+            navigate(`/score/${answerNo}`);
         }
     }
     
@@ -78,8 +78,8 @@ const TestPage = () => {
             });
 
             const data = await response.json();
-            const answerid = data.answerid;
-            setAnswerId(answerid);
+            const answerNo = data.answerNo;
+            setAnswerNo(answerNo);
             console.log(data);
 
         } catch (error) {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Background from "../../components/background/Background";
+import DefaultButton from '../../components/button/DefaultButton';
 import Header from '../../components/header/Header';
 import Number from '../../components/number/Number';
 import TestBlock from '../../components/testblock/Testblock';
@@ -24,36 +25,33 @@ const ScoreDetailPage = () => {
         images: [null, null, null, null, null]
     })));
 
-    const handleCkAnswer = (qidx, aidx) => {
-        const updateAnswerList = [...answerList];
-        updateAnswerList[qidx] = aidx;
-        setAnswerList(updateAnswerList);
-    
+    const handleNextPage = (qidx, aidx) => {
         if(page < 9){
             setPage(page+1);
         } else {
-            console.log(updateAnswerList);    //체크용
             handleSubmit();
             navigate(`/score/${answerId}`);
         }
     }
     
 
-    const [answerList, setAnswerList] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    const [answerList, setAnswerList] = useState([1, 1, 1, 1, 1, 1, 1, 2, 2, 2])
 
     useEffect(() => {
         const handleGet = async () => {
             try {
-                const response = await fetch('QUIZGET', {
+                const response = await fetch('SCOREDETAILGET', {
                     method: 'GET',
                     body: JSON.stringify({
-                        quizId: quizId,
+                        answerId: answerId,
                     })
                 });
 
                 const data = await response.json();
-                const getQuizList = data.quizList;
-                setQuizList(getQuizList);
+
+                // quizList와 answerList 불러옴
+                setQuizList(data.quizList);
+                setAnswerList(data.answerList);
 
             } catch (error) {
                 console.error('Error:', error);
@@ -62,7 +60,7 @@ const ScoreDetailPage = () => {
 
         handleGet(); // 자동호출
 
-    }, [quizId]); // 컴포넌트 처음 랜더링 시 실행
+    }, [answerId]); // 컴포넌트 처음 랜더링 시 실행
 
     const handleSubmit = async (updateAnswerList) => {
         try {
@@ -85,31 +83,58 @@ const ScoreDetailPage = () => {
         }
     };
 
-
     return(
         <Background>
             <SetVhComponent/>
             <Header/>
             <Number page={page+1}/>
-
+    
             {quizList.map((val, qidx)=>
             <div className='quizList' style={{display:page===qidx?'flex':'none'}}>
                 <div className='quizLayout'>
                     {page+1}. {val.questionDetail}
                 </div>
                 <div className='answerLayout'>
-                    {val.answers.map((aval, aidx) => (
-                        <TestBlock text={aval}
-                        file={val.images[aidx]}
-                        variant='normal'
-                        onClick={()=>handleCkAnswer(qidx, aidx+1)}
-                        />
-                    ))}
+                    {val.correctNo === answerList[page] ?   // 틀렸다면 후자 맞았다면 전자
+                        val.answers.map((aval, aidx) => (
+                            <TestBlock text={aval}
+                            file={val.images[aidx]}
+                            variant={(aidx+1 === answerList[page]) ? 'blue' : 'normal'}
+                            />
+                        ))
+                    :
+                    val.answers.map((aval, aidx) => {
+
+                        // 원래 답 green, 틀린 답 red, 나머지 normal
+                        let variant;
+                        if (aidx+1 === answerList[page]) {
+                            variant = 'red';
+                        } else if (aidx+1 === val.correctNo) {
+                            variant = 'green';
+                        } else {
+                            variant = 'normal';
+                        }
+
+                        return (
+                            <TestBlock text={aval}
+                            file={val.images[aidx]}
+                            variant={variant}
+                            />
+                        );
+                    })
+                    
+                    }
+                <div className='bottom' style={{ marginTop: '20px' }}>
+                    <DefaultButton text={page<9?"다음":"돌아가기"} variant='normal' onClick={handleNextPage} />
+                </div>
+
                 </div>
             </div>
+            
             )}
         </Background>
     );
-
+    
 }
 export default ScoreDetailPage;
+    

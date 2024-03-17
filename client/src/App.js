@@ -26,9 +26,9 @@ function App() {
 
                 <Route path="/main/test/:quizId" element={<MainTestPage/>}></Route>
                 <Route path="/test/:quizId" element={<TestPage/>}></Route>
-                <Route path="/score/:answerId" element={<ScorePage/>}></Route>
+                <Route path="/score/:answerNo" element={<ScorePage/>}></Route>
 
-                <Route path="/score-detail/:answerId" element={<ScoreDetailPage/>}></Route>
+                <Route path="/score-detail/:answerNo" element={<ScoreDetailPage/>}></Route>
                 <Route path="/*" element={<MainMakePage/>}></Route>
             </Routes>
         </BrowserRouter>
