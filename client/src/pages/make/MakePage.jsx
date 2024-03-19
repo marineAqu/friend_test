@@ -9,6 +9,10 @@ import ImagePreview from '../../components/imagepreview/ImagePreview';
 import './MakePage.css';
 
 
+const randomQuestion = ["내가 태어난 곳은?", "최근 내 관심사", "내가 제일 좋아하는 과자"];
+const randomAnswer = [["경기, 강원도", "충청도", "경상도", "전라도", "제주도"], ["아이돌", "건강", "연애", "정치", "공부"], ["마가렛트", "포카칩", "참쌀", "콘칩", "빅파이"]];
+let nowRandomNum = 0;
+
 const MakePage = () => {
     const setVh = () => {
         const vh = window.innerHeight * 0.01;
@@ -104,6 +108,20 @@ const MakePage = () => {
         navigate("/share/" + quizId);
     }
 
+    const makeRandomQuiz = () => {
+        const newQuizList = [...quizList];
+        newQuizList[page].questionDetail = randomQuestion[nowRandomNum]; //질문 설정
+        newQuizList[page].answers[0] = randomAnswer[nowRandomNum][0];
+        newQuizList[page].answers[1] = randomAnswer[nowRandomNum][1];
+        newQuizList[page].answers[2] = randomAnswer[nowRandomNum][2];
+        newQuizList[page].answers[3] = randomAnswer[nowRandomNum][3];
+        newQuizList[page].answers[4] = randomAnswer[nowRandomNum][4];
+        setQuizList(newQuizList);
+
+        if(nowRandomNum !== 2) nowRandomNum++;
+        else nowRandomNum = 0;
+    }
+
     const handleNextPage = () => {
         if (page < 9) {
             // 다음페이지로
@@ -123,8 +141,14 @@ const MakePage = () => {
             const updatedQuizList = [...quizList];
             updatedQuizList[page].questionNo = page + 1;
             setQuizList(updatedQuizList);
-            handleSubmit();
+            const myCode= handleSubmit();
             console.log(quizList);
+            //TODO: localstorage에 이미 퀴즈를 만들었으므로 저장하는 코드 주석 풀기 (현재 테스트를 위해 임시 주석처리)
+            /*
+            localStorage.setItem('userId', myCode);
+            */
+
+
             handlePush();
         }
     };
@@ -223,7 +247,7 @@ const MakePage = () => {
             </div>
             <div className='bottom'>
                     <DefaultButton text={page < 9 ? '다음' : '완료'} onClick={handleNextPage} variant={page < 9 ? 'normal' : 'grey'}/>
-                    <DefaultButton text="자동생성" variant='blue' />
+                    <DefaultButton text="자동생성" onClick={makeRandomQuiz} variant='blue' />
             </div>
         </Background>
     );
