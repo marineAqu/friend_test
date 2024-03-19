@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Background from "../../components/background/Background";
 import DefaultButton from '../../components/button/DefaultButton';
@@ -8,9 +8,7 @@ import "./MainTestPage.css";
 
 const MainTestPage = () => {
 
-    //temp
-    const quizname = "신스언니";
-
+    const [quizname, setQuizname] = useState("test");
     const [username, setUsername] = useState("");
 
     const navigate = useNavigate(); //navigate
@@ -29,6 +27,28 @@ const MainTestPage = () => {
             alert("제출자 이름을 입력해주세요");
         }
     }
+
+    useEffect(() => {
+        const handleGet = async () => {
+            try {
+                const response = await fetch('testmain', {
+                    method: 'GET',
+                    body: JSON.stringify({
+                        quizId: quizId,
+                    })
+                });
+    
+                const data = await response.json();
+                setQuizname(data.quizname);
+    
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+    
+        handleGet();
+    
+    }, [quizId]); // 컴포넌트 처음 랜더링 시 실행
     
 
 

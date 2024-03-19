@@ -42,7 +42,7 @@ const SharePage = () => {
   useEffect(() => {
     const handleGet = async () => {
         try {
-            const response = await fetch('SCOREGET', {
+            const response = await fetch('sharepage', {
                 method: 'GET',
                 body: JSON.stringify({
                     quizId: quizId,
