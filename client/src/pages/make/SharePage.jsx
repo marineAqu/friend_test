@@ -1,7 +1,7 @@
 //Sharepage.jsx
 
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import Background from '../../components/background/Background.jsx';
 import DefaultButton from '../../components/button/DefaultButton';
 import ShareLinkButton from '../../components/button/ShareLinkButton.jsx'; // 수정된 부분
@@ -11,11 +11,17 @@ import './SharePage.css';
 
 //TODO: 닉네임 get하는 api
 const SharePage = () => {
+  const [nickname, setNickname] = useState("test");
+  const [sharelink, setSharelink] = useState("http:/3000/shareplease");
+
   const navigate = useNavigate();
 
   const handlePush = () => {
     navigate("/main/make");
   }
+
+    /* param으로 name 받아놓음 */
+    const { quizId } = useParams();
 
   const setVh = () => {
     const vh = window.innerHeight * 0.01;
@@ -32,8 +38,31 @@ const SharePage = () => {
     window.addEventListener('resize', onResize);
   }, [])
 
-  const nickname = "범고래";
-  const sharelink = "http:/3000/shareplease";
+
+  useEffect(() => {
+    const handleGet = async () => {
+        try {
+            const response = await fetch('SCOREGET', {
+                method: 'GET',
+                body: JSON.stringify({
+                    quizId: quizId,
+                })
+            });
+
+            const data = await response.json();
+            setNickname(data.nickname);
+            setSharelink("http:/3000/" + {quizId})
+
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    handleGet();
+
+}, [quizId]); // 컴포넌트 처음 랜더링 시 실행
+
+
 
   return (
     <Background>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Background from "../../components/background/Background";
 import DefaultButton from '../../components/button/DefaultButton';
 import Header from '../../components/header/Header';
@@ -10,11 +10,7 @@ import SetVhComponent from '../../components/vh/SetVhComponent';
 const ScoreDetailPage = () => {
     const navigate = useNavigate(); //navigates
 
-    const { quizId } = useParams(); // 경로
-    const location = useLocation();
-    const searchParams = new URLSearchParams(location.search);
-    const name = searchParams.get('name'); // name 받기
-    const [answerId, setAnswerId] = useState(0);
+    const { answerNo } = useParams(); // 경로
 
     const [page, setPage] = useState(0);
     const [quizList, setQuizList] = useState(Array.from({ length: 10 }, () => ({
@@ -29,8 +25,7 @@ const ScoreDetailPage = () => {
         if(page < 9){
             setPage(page+1);
         } else {
-            handleSubmit();
-            navigate(`/score/${answerId}`);
+            navigate(`/score/${answerNo}`);
         }
     }
     
@@ -43,7 +38,7 @@ const ScoreDetailPage = () => {
                 const response = await fetch('SCOREDETAILGET', {
                     method: 'GET',
                     body: JSON.stringify({
-                        answerId: answerId,
+                        answerNo: answerNo,
                     })
                 });
 
@@ -60,28 +55,8 @@ const ScoreDetailPage = () => {
 
         handleGet(); // 자동호출
 
-    }, [answerId]); // 컴포넌트 처음 랜더링 시 실행
+    }, [answerNo]); // 컴포넌트 처음 랜더링 시 실행
 
-    const handleSubmit = async (updateAnswerList) => {
-        try {
-            const response = await fetch('ANSWERPOST', {
-                method: 'POST',
-                body: JSON.stringify({
-                    quizId: quizId,
-                    answerName: name,
-                    answerList: updateAnswerList,
-                })
-            });
-
-            const data = await response.json();
-            const answerid = data.answerid;
-            setAnswerId(answerid);
-            console.log(data);
-
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
 
     return(
         <Background>
