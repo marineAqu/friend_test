@@ -218,6 +218,7 @@ function CountScore(quizId, answerList){
 
 app.post('saveAnswer', async (req, res) => {
     let score = CountScore(req.quizId, req.answerList);
+    let numNo = 0;
 
     connection.query('INSERT INTO quiz_answer (quiz_id, answer_name, answer_id, answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10, score) values (?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ? ,?)',
         [req.quizId, req.answerName, req.답변자아이디, req.answerList[0], req.answerList[1], req.answerList[2], req.answerList[3], req.answerList[4], req.answerList[5], req.answerList[6], req.answerList[7], req.answerList[8], req.answerList[9], score],
@@ -226,6 +227,19 @@ app.post('saveAnswer', async (req, res) => {
                 throw error;
             }
         })
+
+    connection.query('SELECT * FROM quiz_answer WHERE quiz_id = ? and answer_id',
+        [req.quizId, req.답변자아이디],
+        function (error, result) {
+            if(error){
+                throw error;
+            }
+            else{
+                numNo = result[0]['no'];
+            }
+        })
+
+    res.json({numNo});
 });
 
 app.get('sharepage', async (req, res) => {
