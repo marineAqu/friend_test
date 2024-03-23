@@ -229,7 +229,20 @@ app.post('saveAnswer', async (req, res) => {
 });
 
 app.get('sharepage', async (req, res) => {
+    let nickname = '';
 
+    connection.query('SELECT quiz_name FROM quiz_list WHERE quiz_id = ?',
+        [req.quizId],
+        function (error, result) {
+            if(error){
+                throw error;
+            }
+            else{
+                quizname = result[0]['quiz_name'];
+            }
+        })
+
+    res.json({nickname});
 });
 
 app.get('maintest', async (req, res) => {
@@ -242,7 +255,7 @@ app.get('maintest', async (req, res) => {
                 throw error;
             }
             else{
-                quizname = result[0][quiz_name];
+                quizname = result[0]['quiz_name'];
             }
         })
 
