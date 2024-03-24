@@ -9,6 +9,7 @@ import MainTestPage from "./pages/quiz/MainTestPage.jsx";
 import ScoreDetailPage from "./pages/quiz/ScoreDetailPage.jsx";
 import ScorePage from "./pages/quiz/ScorePage.jsx";
 import TestPage from "./pages/quiz/TestPage.jsx";
+import TempTestPage from "./pages/make/TempTestPage.jsx";
 
 
 
@@ -30,6 +31,9 @@ function App() {
 
                 <Route path="/score-detail/:answerNo" element={<ScoreDetailPage/>}></Route>
                 <Route path="/*" element={<MainMakePage/>}></Route>
+
+
+                <Route path="/temp/test" element={<TempTestPage/>}></Route>
             </Routes>
         </BrowserRouter>
     )
