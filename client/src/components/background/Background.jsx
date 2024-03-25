@@ -11,7 +11,7 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
-const BackgroundImage = styled.body`
+const BackgroundImage = styled.div`
     font-family: 'seoul-s';
     width: 100vw;
     height: calc(var(--vh,1vh)*100);
@@ -24,7 +24,7 @@ const BackgroundImage = styled.body`
 
 const InnerBox = styled.div`
 
-    height: calc(var(--vh,1vh)*100);
+    height: 100%;
     padding-top: calc(var(--vh,1vh)*15);
     text-align: center;
     overflow-y: auto;
