@@ -1,7 +1,7 @@
 //server.js
 const express = require('express');
 const app = express();
-const multer = require("multer");
+let multer = require("multer");
 const test = require('./Router/test');
 const cors = require('cors');
 app.use(cors());
@@ -22,21 +22,27 @@ const connection = mysql.createConnection({
 
 connection.connect();
 
-const storage = multer.diskStorage({
+var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads');
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname);
-    }
+    },
+    fileFilter: function (req, file, callback){
+        var ext = path.extname(file.originalname);
+        if(ext !== ".png" && ext !== "jpg" && ext !== ".jpeg"){
+            return callback(new Error("PNG, JPG만 업로드하세요."));
+        }
+        callback(null, true);
+    },
+    limits: {
+        fileSize: 1024 * 1024,
+    },
 });
 
-const upload = multer({
-    storage: storage,
-    limits: {
-        files: 50,
-        fileSize: 1024 * 1024 * 1024
-    }
+var upload = multer({
+    storage: storage
 });
 
 app.use('/api', test);
@@ -95,12 +101,6 @@ function saveQuizInfo(name, uniqueId){
         })
 }
 
-function readImageFile(file){
-    const bitmap = readFileSync(file);
-    const buf = new Buffer.from(bitmap)
-    return buf
-}
-
 //퀴즈 내용 저장
 function saveQuizDetail(uniqueId, quizDetail){
     connection.query('INSERT INTO quiz_detail (user_no, question_detail, question_no, correct_no, answer1, answer2, answer3, answer4, answer5, image1, image2, image3, image4, image5) values (?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ? ,?)',
@@ -131,8 +131,8 @@ app.get('scoreditail', async (req, res) => {
         })
 
     //answerList 반환
-    connection.query('SELECT answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10 FROM quiz_answer WHERE quiz_id = ? and answer_id = ?',
-        [req.answerNo, req.답변자_코드],
+    connection.query('SELECT answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10 FROM quiz_answer WHERE quiz_id = (SELECT quiz_id FROM quiz_answer WHERE no = ?)',
+        [req.answerNo],
         function (error, result) {
             if(error){
                 throw error;
@@ -143,7 +143,6 @@ app.get('scoreditail', async (req, res) => {
         })
 
     res.json({quizList, answerList});
-    //quizList와 answerList를 res에 담아보내기
 });
 
 app.get('score', async (req, res) => {
@@ -164,8 +163,8 @@ app.get('score', async (req, res) => {
             }
         })
 
-    connection.query('SELECT score FROM quiz_answer WHERE quiz_id = ? and answer_id = ?',
-        [req.answerNo, req.답변자_이름],
+    connection.query('SELECT score FROM quiz_answer WHERE no = ?',
+        [req.answerNo],
         function (error, result) {
             if(error){
                 throw error;
@@ -220,16 +219,16 @@ app.post('saveAnswer', async (req, res) => {
     let score = CountScore(req.quizId, req.answerList);
     let numNo = 0;
 
-    connection.query('INSERT INTO quiz_answer (quiz_id, answer_name, answer_id, answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10, score) values (?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ? ,?)',
-        [req.quizId, req.answerName, req.답변자아이디, req.answerList[0], req.answerList[1], req.answerList[2], req.answerList[3], req.answerList[4], req.answerList[5], req.answerList[6], req.answerList[7], req.answerList[8], req.answerList[9], score],
+    connection.query('INSERT INTO quiz_answer (quiz_id, answer_name, answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10, score) values (?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ? ,?)',
+        [req.quizId, req.answerName, req.answerList[0], req.answerList[1], req.answerList[2], req.answerList[3], req.answerList[4], req.answerList[5], req.answerList[6], req.answerList[7], req.answerList[8], req.answerList[9], score],
         function (error, result) {
             if(error){
                 throw error;
             }
         })
 
-    connection.query('SELECT * FROM quiz_answer WHERE quiz_id = ? and answer_id',
-        [req.quizId, req.답변자아이디],
+    connection.query('SELECT * FROM quiz_answer WHERE quiz_id = ? and answer_name = ?',
+        [req.quizId, req.answerName],
         function (error, result) {
             if(error){
                 throw error;
@@ -283,12 +282,28 @@ app.post('scoreditail', async (req, res) => {
 
 */
 
-app.post('/saveMadeQuiz', upload.array('images'),async (req, res) => {
+app.get('scoreboard', async (req, res) => {
+    let answerList = [[]];
+
+    connection.query('SELECT * FROM quiz_answer WHERE quiz_id = ?',
+        [req.quizId],
+        function (error, result) {
+            if(error){
+                throw error;
+            }
+            else{
+                answerList = result;
+            }
+        })
+
+    console.log(answerList);
+    res.json({answerList});
+});
+
+app.post('/saveMadeQuiz', upload.array('image[]'),async (req, res) => {
     let uniqueId; //퀴즈 코드
     const name = req.body.name; //작성자 이름
     const quizList = JSON.parse(req.body.quizList);
-
-    console.log("테스트용:"+ req.files[0]); //여긴 undefined
 
     // console check
     req.files.map((data) => {
@@ -321,4 +336,8 @@ app.post('/saveMadeQuiz', upload.array('images'),async (req, res) => {
         //saveQuizDetail(uniqueId, quizList[key], req.images[key]);
         //await saveQuizDetail(uniqueId, quizList[key]);
     }
+});
+
+app.post('/tempTest', upload.single('image'), function (req, res) {
+    res.json({message: '이미지 업로드 성공'});
 });
