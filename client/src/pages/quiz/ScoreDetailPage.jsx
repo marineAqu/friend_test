@@ -33,10 +33,12 @@ const ScoreDetailPage = () => {
     const [answerList, setAnswerList] = useState([1, 1, 1, 1, 1, 1, 1, 2, 2, 2])
 
     useEffect(() => {
+
+        console.log(answerNo);
         const handleGet = async () => {
             try {
                 const response = await fetch('SCOREDETAILGET', {
-                    method: 'GET',
+                    method: 'POST',
                     body: JSON.stringify({
                         answerNo: answerNo,
                     })

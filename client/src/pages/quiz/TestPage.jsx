@@ -47,7 +47,7 @@ const TestPage = () => {
         const handleGet = async () => {
             try {
                 const response = await fetch('QUIZGET', {
-                    method: 'GET',
+                    method: 'POST',
                     body: JSON.stringify({
                         quizId: quizId,
                     })

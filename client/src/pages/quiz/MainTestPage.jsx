@@ -32,7 +32,7 @@ const MainTestPage = () => {
         const handleGet = async () => {
             try {
                 const response = await fetch('testmain', {
-                    method: 'GET',
+                    method: 'POST',
                     body: JSON.stringify({
                         quizId: quizId,
                     })

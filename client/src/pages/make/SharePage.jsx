@@ -44,7 +44,7 @@ const SharePage = () => {
     const handleGet = async () => {
         try {
             const response = await fetch('sharepage', {
-                method: 'GET',
+                method: 'POST',
                 body: JSON.stringify({
                     quizId: quizId,
                 })

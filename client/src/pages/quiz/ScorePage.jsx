@@ -19,7 +19,7 @@ const ScorePage = () => {
         const handleGet = async () => {
             try {
                 const response = await fetch('SCOREGET', {
-                    method: 'GET',
+                    method: 'POST',
                     body: JSON.stringify({
                         answerNo: answerNo,
                     })
