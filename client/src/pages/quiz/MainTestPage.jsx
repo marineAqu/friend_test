@@ -31,8 +31,12 @@ const MainTestPage = () => {
     useEffect(() => {
         const handleGet = async () => {
             try {
-                const response = await fetch('testmain', {
+                const response = await fetch('/maintest', {
                     method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({
                         quizId: quizId,
                     })

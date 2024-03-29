@@ -18,8 +18,12 @@ const ScorePage = () => {
     useEffect(() => {
         const handleGet = async () => {
             try {
-                const response = await fetch('SCOREGET', {
+                const response = await fetch('/score', {
                     method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({
                         answerNo: answerNo,
                     })

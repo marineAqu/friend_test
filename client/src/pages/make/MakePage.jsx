@@ -168,6 +168,10 @@ const MakePage = () => {
 
             const response = await fetch('/saveMadeQuiz', {
                 method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
                 body: formData,
             });
 

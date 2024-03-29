@@ -43,8 +43,12 @@ const SharePage = () => {
   useEffect(() => {
     const handleGet = async () => {
         try {
-            const response = await fetch('sharepage', {
+            const response = await fetch('/sharepage', {
                 method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({
                     quizId: quizId,
                 })

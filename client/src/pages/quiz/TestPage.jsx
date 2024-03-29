@@ -46,8 +46,12 @@ const TestPage = () => {
     useEffect(() => {
         const handleGet = async () => {
             try {
-                const response = await fetch('QUIZGET', {
+                const response = await fetch('/getquiz', {
                     method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({
                         quizId: quizId,
                     })
@@ -68,8 +72,12 @@ const TestPage = () => {
 
     const handleSubmit = async (updateAnswerList) => {
         try {
-            const response = await fetch('ANSWERPOST', {
+            const response = await fetch('/saveAnswer', {
                 method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({
                     quizId: quizId,
                     answerName: name,

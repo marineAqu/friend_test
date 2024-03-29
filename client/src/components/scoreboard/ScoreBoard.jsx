@@ -49,9 +49,10 @@ export default function StickyHeadTable({quizId}) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:3000/sharepage', {
+                const response = await fetch('/scoreboard', {
                     method: 'POST',
                     headers: {
+                        'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
