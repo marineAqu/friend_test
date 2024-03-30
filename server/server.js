@@ -116,108 +116,115 @@ function saveQuizDetail(uniqueId, quizDetail){
 
 app.post('/scoredetail', async (req, res) => {
 
-    let quizList = [];
-    let answerList = [];
-    let quizCode = "";
+    try {
+        console.log("answerNo test: " + req.body.answerNo);
+        console.log("req.body 출력 결과: " + JSON.stringify(req.body)); // {} 라고 출력됨
 
-    console.log("answerNo test: "+req.body.answerNo);
+        let quizCode = await new Promise((resolve, reject) => {
+            connection.query('SELECT quiz_id FROM quiz_answer WHERE no = ?', [req.body.answerNo], function (error, result) {
+                if (error) {
+                    reject(error);
+                } else {
+                    console.log("첫번째 쿼리 결과: " + result[0]['quiz_id']);
+                    resolve(result[0]['quiz_id']);
+                }
+            });
+        });
 
-    console.log("req.body 출력 결과: "+ JSON.stringify(req.body)); // {} 라고 출력됨
+        //quizList 반환
+        let quizList = await new Promise((resolve, reject) => {
+            connection.query('SELECT * FROM quiz_detail WHERE user_no = ?', [quizCode], function (error, result) {
+                if (error) {
+                    reject(error);
+                } else {
+                    console.log("두번째 쿼리 결과: " + JSON.stringify(result));
+                    resolve(result);
+                }
+            });
+        });
 
-    //let number = req.body.answerNo;
-    //req.answerNo[0], req.answerNo[1], req.answerNo[2], req.answerNo[3], req.answerNo[4], req.answerNo[5], req.answerNo[6], req.answerNo[7], req.answerNo[8], req.answerNo[9]
+        //answerList 반환
+        let answerList = await new Promise((resolve, reject) => {
+            connection.query('SELECT answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10 FROM quiz_answer WHERE no = ?', [req.body.answerNo], function (error, result) {
+                if (error) {
+                    reject(error);
+                } else {
+                    console.log("세번째 쿼리 결과: " + JSON.stringify(result));
+                    resolve(result[0]);
+                }
+            });
+        });
 
-    connection.query('SELECT quiz_id FROM quiz_answer WHERE no = ?',
-        [1],
-        function (error, result) {
-            if(error){
-                throw error;
-            }
-            else{
-                console.log("첫번째 쿼리 결과: "+result[0]['quiz_id']);
-                quizCode = result[0]['quiz_id'];
-            }
-        })
-
-    //quizList 반환
-    connection.query('SELECT * FROM quiz_detail WHERE user_no = ?',
-        [quizCode],
-        function (error, result) {
-            if(error){
-                throw error;
-            }
-            else{
-                quizList = result[0];
-                console.log("두번째 쿼리 결과: "+quizList);
-            }
-        })
-
-    //answerList 반환
-    connection.query('SELECT answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10 FROM quiz_answer WHERE quiz_id = (SELECT quiz_id FROM quiz_answer WHERE no = ?)',
-        [req.answerNo],
-        function (error, result) {
-            if(error){
-                throw error;
-            }
-            else{
-                answerList = result[0];
-                console.log("세번째 쿼리 결과: "+answerList);
-            }
-        })
-
-    console.log("마지막 res: "+{quizList, answerList});
-    res.json({quizList, answerList});
-    //console.log("test: "+json({quizList, answerList}));
-});
-
-app.get('score', async (req, res) => {
-
-    console.log(req.answerNo);
-
-    let quizname = '';
-    let score = 0;
-
-    connection.query('SELECT quiz_name FROM quiz_list WHERE quiz_id = ?',
-        [req.answerNo],
-        function (error, result) {
-            if(error){
-                throw error;
-            }
-            else{
-                quizname = result[0]['quiz_name'];
-            }
-        })
-
-    connection.query('SELECT score FROM quiz_answer WHERE no = ?',
-        [req.answerNo],
-        function (error, result) {
-            if(error){
-                throw error;
-            }
-            else{
-                score = result[0]['score'];
-            }
-        })
-
-    res.json({quizname, score});
+        console.log("마지막 res: " + JSON.stringify({ quizList, answerList }));
+        res.json({ quizList, answerList });
+    } catch (error) {
+        console.error("에러 발생: " + error);
+        res.status(500).json({ error: "서버 내부 오류 발생" });
+    }
 
 });
 
-app.get('getquiz', async (req, res) => {
-    let quizList = [];
+app.post('/score', async (req, res) => {
 
-    connection.query('SELECT * FROM quiz_detail WHERE user_no = ? ORDER BY question_no',
-        [req.quizId],
-        function (error, result) {
-            if(error){
-                throw error;
-            }
-            else{
-                quizList = result;
-            }
-        })
+    try {
+        console.log("answerNo test: " + req.body.answerNo);
 
-    res.json({quizList});
+        let quizname = await new Promise((resolve, reject) => {
+            connection.query('SELECT quiz_name FROM quiz_list WHERE quiz_id = (SELECT quiz_id FROM quiz_answer WHERE no = ?)', [req.body.answerNo], function (error, result) {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result[0]['quiz_name']);
+                    console.log("quizname: "+result[0]['quiz_name']);
+                }
+            });
+        });
+
+        let score = await new Promise((resolve, reject) => {
+            connection.query('SELECT score FROM quiz_answer WHERE no = ?', [req.body.answerNo], function (error, result) {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result[0]['score']);
+                    console.log("score: "+result[0]['score']);
+                }
+            });
+        });
+
+        res.json({ quizname, score });
+        console.log("마지막 res: " + JSON.stringify({ quizname, score }));
+    } catch (error) {
+        console.error("에러 발생: " + error);
+        res.status(500).json({ error: "서버 내부 오류 발생" });
+    }
+
+});
+
+app.post('/getquiz', async (req, res) => {
+
+    try{
+        console.log("req.body.quizId의 값: "+req.body.quizId);
+
+        let quizList = await new Promise((resolve, reject) => {
+            connection.query('SELECT * FROM quiz_detail WHERE user_no = ? ORDER BY question_no',
+                [req.body.quizId],
+                function (error, result) {
+                    if(error){
+                        reject(error);
+                    }
+                    else{
+                        resolve(result);
+                    }
+                });
+        });
+
+        res.json({quizList});
+        console.log("마지막 res: " + JSON.stringify({ quizList }));
+
+    } catch (error) {
+        console.error("에러 발생: " + error);
+        res.status(500).json({ error: "서버 내부 오류 발생" });
+    }
 });
 
 
@@ -240,7 +247,7 @@ function CountScore(quizId, answerList){
     return countScore;
 }
 
-app.post('saveAnswer', async (req, res) => {
+app.post('/saveAnswer', async (req, res) => {
     let score = CountScore(req.quizId, req.answerList);
     let numNo = 0;
 
@@ -266,7 +273,7 @@ app.post('saveAnswer', async (req, res) => {
     res.json({numNo});
 });
 
-app.get('sharepage', async (req, res) => {
+app.post('/sharepage', async (req, res) => {
     let nickname = '';
 
     connection.query('SELECT quiz_name FROM quiz_list WHERE quiz_id = ?',
@@ -283,7 +290,7 @@ app.get('sharepage', async (req, res) => {
     res.json({nickname});
 });
 
-app.get('maintest', async (req, res) => {
+app.post('/maintest', async (req, res) => {
     let quizname = '';
 
     connection.query('SELECT quiz_name FROM quiz_list WHERE quiz_id = ?',
@@ -300,7 +307,7 @@ app.get('maintest', async (req, res) => {
     res.json({quizname});
 });
 
-app.get('scoreboard', async (req, res) => {
+app.post('/scoreboard', async (req, res) => {
     let answerList = [[]];
 
     connection.query('SELECT * FROM quiz_answer WHERE quiz_id = ?',
