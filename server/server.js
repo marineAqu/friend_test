@@ -228,49 +228,62 @@ app.post('/getquiz', async (req, res) => {
 });
 
 
-function CountScore(quizId, answerList){
-    let countScore = 0;
-
-    cconnection.query('SELECT correct_no FROM quiz_detail WHERE user_no = ? ORDER BY question_no',
-        [quizId],
-        function (error, result) {
-            if(error){
-                throw error;
-            }
-            else{
-                for(let i=0; i<10; i++){
-                    if(result[i]['correct_no'] === answerList[i]) countScore++;
-                }
-            }
-        })
-
-    return countScore;
-}
-
 app.post('/saveAnswer', async (req, res) => {
-    let score = CountScore(req.quizId, req.answerList);
-    let numNo = 0;
+    try{
+        let score = await new Promise((resolve, reject) => {
+            let count = 0;
 
-    connection.query('INSERT INTO quiz_answer (quiz_id, answer_name, answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10, score) values (?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ? ,?)',
-        [req.quizId, req.answerName, req.answerList[0], req.answerList[1], req.answerList[2], req.answerList[3], req.answerList[4], req.answerList[5], req.answerList[6], req.answerList[7], req.answerList[8], req.answerList[9], score],
-        function (error, result) {
-            if(error){
-                throw error;
-            }
-        })
+            connection.query('SELECT correct_no FROM quiz_detail WHERE user_no = ? ORDER BY question_no',
+                [req.body.quizId],
+                function (error, result) {
+                    if(error){
+                        reject(error);
+                    }
+                    else{
+                        for(let i=0; i<10; i++){
+                            if(result[i]['correct_no'] === req.body.answerList[i]) count++;
+                        }
 
-    connection.query('SELECT * FROM quiz_answer WHERE quiz_id = ? and answer_name = ?',
-        [req.quizId, req.answerName],
-        function (error, result) {
-            if(error){
-                throw error;
-            }
-            else{
-                numNo = result[0]['no'];
-            }
-        })
+                        console.log("count: "+count);
+                        resolve(count);
+                    }
+                });
+        });
 
-    res.json({numNo});
+        await new Promise((resolve, reject) => {
+            connection.query('INSERT INTO quiz_answer (quiz_id, answer_name, answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10, score) values (?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ? ,?)',
+                [req.body.quizId, req.body.answerName, req.body.answerList[0], req.body.answerList[1], req.body.answerList[2], req.body.answerList[3], req.body.answerList[4], req.body.answerList[5], req.body.answerList[6], req.body.answerList[7], req.body.answerList[8], req.body.answerList[9], score],
+                function (error, result) {
+                    if(error){
+                        reject(error);
+                    }
+                    else{
+                        resolve();
+                    }
+                });
+        });
+
+        let numNo = await new Promise((resolve, reject) => {
+            connection.query('SELECT * FROM quiz_answer WHERE quiz_id = ? and answer_name = ?',
+                [req.body.quizId, req.body.answerName],
+                function (error, result) {
+                    if(error){
+                        reject(error);
+                    }
+                    else{
+                        resolve(result[0]['no']);
+                        console.log("numNo: "+result[0]['no']);
+                    }
+                })
+        });
+
+        res.json({numNo});
+        console.log("res: "+ JSON.stringify({ numNo }));
+
+    } catch (error) {
+        console.error("에러 발생: " + error);
+        res.status(500).json({ error: "서버 내부 오류 발생" });
+    }
 });
 
 app.post('/sharepage', async (req, res) => {
