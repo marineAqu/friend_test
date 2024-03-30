@@ -3,15 +3,17 @@ const express = require('express');
 const app = express();
 let multer = require("multer");
 const test = require('./Router/test');
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
 const cors = require('cors');
 app.use(cors());
 require('dotenv').config();
 
 //app.use('/uploads', static(path.join(__dirname, 'uploads')));
-
+app.use(express.urlencoded({ extended: false }));
 
 const mysql = require('mysql');
-const {response} = require("express");
+const {response, json} = require("express");
 const {readFileSync} = require("fs");
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -112,21 +114,41 @@ function saveQuizDetail(uniqueId, quizDetail){
         })
 }
 
-app.get('scoreditail', async (req, res) => {
+app.post('/scoredetail', async (req, res) => {
 
     let quizList = [];
     let answerList = [];
+    let quizCode = "";
+
+    console.log("answerNo test: "+req.body.answerNo);
+
+    console.log("req.body 출력 결과: "+ JSON.stringify(req.body)); // {} 라고 출력됨
+
+    //let number = req.body.answerNo;
     //req.answerNo[0], req.answerNo[1], req.answerNo[2], req.answerNo[3], req.answerNo[4], req.answerNo[5], req.answerNo[6], req.answerNo[7], req.answerNo[8], req.answerNo[9]
+
+    connection.query('SELECT quiz_id FROM quiz_answer WHERE no = ?',
+        [1],
+        function (error, result) {
+            if(error){
+                throw error;
+            }
+            else{
+                console.log("첫번째 쿼리 결과: "+result[0]['quiz_id']);
+                quizCode = result[0]['quiz_id'];
+            }
+        })
 
     //quizList 반환
     connection.query('SELECT * FROM quiz_detail WHERE user_no = ?',
-        [req.answerNo],
+        [quizCode],
         function (error, result) {
             if(error){
                 throw error;
             }
             else{
                 quizList = result[0];
+                console.log("두번째 쿼리 결과: "+quizList);
             }
         })
 
@@ -139,10 +161,13 @@ app.get('scoreditail', async (req, res) => {
             }
             else{
                 answerList = result[0];
+                console.log("세번째 쿼리 결과: "+answerList);
             }
         })
 
+    console.log("마지막 res: "+{quizList, answerList});
     res.json({quizList, answerList});
+    //console.log("test: "+json({quizList, answerList}));
 });
 
 app.get('score', async (req, res) => {
@@ -275,13 +300,6 @@ app.get('maintest', async (req, res) => {
     res.json({quizname});
 });
 
-/*
-
-app.post('scoreditail', async (req, res) => {
-});
-
-*/
-
 app.get('scoreboard', async (req, res) => {
     let answerList = [[]];
 
@@ -300,7 +318,7 @@ app.get('scoreboard', async (req, res) => {
     res.json({answerList});
 });
 
-app.post('/saveMadeQuiz', upload.array('image[]'),async (req, res) => {
+app.post('/saveMadeQuiz',async (req, res) => {
     let uniqueId; //퀴즈 코드
     const name = req.body.name; //작성자 이름
     const quizList = JSON.parse(req.body.quizList);
