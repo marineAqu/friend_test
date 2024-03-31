@@ -63,12 +63,15 @@ const ScoreDetailPage = () => {
 
     }, [answerNo]); // 컴포넌트 처음 랜더링 시 실행
 
+    const resultList = quizList.map((quiz, index) => answerList[index] === quiz.correctNo);
+
+
 
     return(
         <Background>
             <SetVhComponent/>
             <Header/>
-            <Number page={page+1}/>
+            <Number page={page+1} mode='score' resultList={resultList}/>
     
             {quizList.map((val, qidx)=>
             <div className='quizList' style={{display:page===qidx?'flex':'none'}}>
