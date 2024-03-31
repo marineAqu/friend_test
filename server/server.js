@@ -366,21 +366,22 @@ app.post('/scoreboard', async (req, res) => {
     }
 });
 
-app.post('/saveMadeQuiz',async (req, res) => {
+app.post('/saveMadeQuiz',upload.fields([{ name: 'image_0_0', maxCount: 1 },{ name: 'image_0_1', maxCount: 1 },{ name: 'image_0_2', maxCount: 1 },{ name: 'image_0_3', maxCount: 1 },{ name: 'image_0_4', maxCount: 1 },
+    { name: 'image_1_0', maxCount: 1 },{ name: 'image_1_1', maxCount: 1 },{ name: 'image_1_2', maxCount: 1 },{ name: 'image_1_3', maxCount: 1 },{ name: 'image_1_4', maxCount: 1 },
+    { name: 'image_2_0', maxCount: 1 },{ name: 'image_2_1', maxCount: 1 },{ name: 'image_2_2', maxCount: 1 },{ name: 'image_2_3', maxCount: 1 },{ name: 'image_2_4', maxCount: 1 },
+    { name: 'image_3_0', maxCount: 1 },{ name: 'image_3_1', maxCount: 1 },{ name: 'image_3_2', maxCount: 1 },{ name: 'image_3_3', maxCount: 1 },{ name: 'image_3_4', maxCount: 1 },
+    { name: 'image_4_0', maxCount: 1 },{ name: 'image_4_1', maxCount: 1 },{ name: 'image_4_2', maxCount: 1 },{ name: 'image_4_3', maxCount: 1 },{ name: 'image_4_4', maxCount: 1 },
+    { name: 'image_5_0', maxCount: 1 },{ name: 'image_5_1', maxCount: 1 },{ name: 'image_5_2', maxCount: 1 },{ name: 'image_5_3', maxCount: 1 },{ name: 'image_5_4', maxCount: 1 },
+    { name: 'image_6_0', maxCount: 1 },{ name: 'image_6_1', maxCount: 1 },{ name: 'image_6_2', maxCount: 1 },{ name: 'image_6_3', maxCount: 1 },{ name: 'image_6_4', maxCount: 1 },
+    { name: 'image_7_0', maxCount: 1 },{ name: 'image_7_1', maxCount: 1 },{ name: 'image_7_2', maxCount: 1 },{ name: 'image_7_3', maxCount: 1 },{ name: 'image_7_4', maxCount: 1 },
+    { name: 'image_8_0', maxCount: 1 },{ name: 'image_8_1', maxCount: 1 },{ name: 'image_8_2', maxCount: 1 },{ name: 'image_8_3', maxCount: 1 },{ name: 'image_8_4', maxCount: 1 },
+    { name: 'image_9_0', maxCount: 1 },{ name: 'image_9_1', maxCount: 1 },{ name: 'image_9_2', maxCount: 1 },{ name: 'image_9_3', maxCount: 1 },{ name: 'image_9_4', maxCount: 1 }]),async (req, res) => {
+
     let uniqueId; //퀴즈 코드
     const name = req.body.name; //작성자 이름
     const quizList = JSON.parse(req.body.quizList);
 
-    // console check
-    req.files.map((data) => {
-        console.log(data);
-    });
-
-    res.status(200).send({
-        message: "Ok",
-        fileInfo: quizList[0].images
-        //req.files
-    })
+    console.log("filed에 files 값: "+req.files);
 
 
     //유일한 코드가 나올 때까지 반복
@@ -404,6 +405,6 @@ app.post('/saveMadeQuiz',async (req, res) => {
     }
 });
 
-app.post('/tempTest', upload.single('image'), function (req, res) {
+app.post('/tempTest', upload.fields([{ name: 'image1', maxCount: 1 }, { name: 'image2', maxCount: 1 }]), function (req, res) {
     res.json({message: '이미지 업로드 성공'});
 });
