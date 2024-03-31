@@ -287,55 +287,83 @@ app.post('/saveAnswer', async (req, res) => {
 });
 
 app.post('/sharepage', async (req, res) => {
-    let nickname = '';
 
-    connection.query('SELECT quiz_name FROM quiz_list WHERE quiz_id = ?',
-        [req.quizId],
-        function (error, result) {
-            if(error){
-                throw error;
-            }
-            else{
-                quizname = result[0]['quiz_name'];
-            }
-        })
+    try{
 
-    res.json({nickname});
+        console.log("req출력: "+req.body.quizId);
+
+        let nickname = await new Promise((resolve, reject) => {
+            connection.query('SELECT quiz_name FROM quiz_list WHERE quiz_id = ?',
+                [req.body.quizId],
+                function (error, result) {
+                    if(error){
+                        reject(error);
+                    }
+                    else{
+                        resolve(result[0]['quiz_name']);
+                    }
+                })
+
+        });
+
+        res.json({nickname});
+        console.log("마지막 res: " + JSON.stringify({ nickname }));
+
+    } catch (error) {
+        console.error("에러 발생: " + error);
+        res.status(500).json({ error: "서버 내부 오류 발생" });
+    }
 });
 
 app.post('/maintest', async (req, res) => {
-    let quizname = '';
 
-    connection.query('SELECT quiz_name FROM quiz_list WHERE quiz_id = ?',
-        [req.quizId],
-        function (error, result) {
-            if(error){
-                throw error;
-            }
-            else{
-                quizname = result[0]['quiz_name'];
-            }
-        })
+    try{
+        let quizname = await new Promise((resolve, reject) => {
+            connection.query('SELECT quiz_name FROM quiz_list WHERE quiz_id = ?',
+                [req.body.quizId],
+                function (error, result) {
+                    if(error){
+                        reject(error);
+                    }
+                    else{
+                        resolve(result[0]['quiz_name']);
+                    }
+                })
 
-    res.json({quizname});
+        });
+
+        res.json({quizname});
+        console.log("마지막 res: " + JSON.stringify({ quizname }));
+
+    } catch (error) {
+        console.error("에러 발생: " + error);
+        res.status(500).json({ error: "서버 내부 오류 발생" });
+    }
 });
 
 app.post('/scoreboard', async (req, res) => {
-    let answerList = [[]];
+    try{
+        let answerList = await new Promise((resolve, reject) => {
+            connection.query('SELECT * FROM quiz_answer WHERE quiz_id = ?',
+                [req.body.quizId],
+                function (error, result) {
+                    if(error){
+                        reject(error);
+                    }
+                    else{
+                        resolve(result);
+                    }
+                });
+        });
 
-    connection.query('SELECT * FROM quiz_answer WHERE quiz_id = ?',
-        [req.quizId],
-        function (error, result) {
-            if(error){
-                throw error;
-            }
-            else{
-                answerList = result;
-            }
-        })
 
-    console.log(answerList);
-    res.json({answerList});
+        res.json({answerList});
+        console.log("마지막 res: " + JSON.stringify({ answerList }));
+
+    } catch (error) {
+        console.error("에러 발생: " + error);
+        res.status(500).json({ error: "서버 내부 오류 발생" });
+    }
 });
 
 app.post('/saveMadeQuiz',async (req, res) => {
