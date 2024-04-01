@@ -1,3 +1,4 @@
 node_modules
 server/uploads
 et --hard fb6c048
+server/.env
