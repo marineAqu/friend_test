@@ -16,12 +16,11 @@ const mysql = require('mysql');
 const {response, json} = require("express");
 const {readFileSync} = require("fs");
 const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '1234',
-    database: 'friend_test'
+    host: process.env.HOST,
+    user: process.env.USER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE
 });
-
 connection.connect();
 
 var storage = multer.diskStorage({
@@ -48,9 +47,6 @@ var upload = multer({
 });
 
 app.use('/api', test);
-
-
-console.log("테스트: "+process.env.NEXT_PUBLIC_TEST);
 
 const port = 3002; //node 서버가 사용할 포트 번호, 리액트의 포트번호(3000)와 충돌하지 않게 다른 번호로 할당
 app.listen(port, () => {
