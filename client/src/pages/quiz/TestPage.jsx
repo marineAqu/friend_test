@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import Background from "../../components/background/Background";
 import Header from '../../components/header/Header';
 import Number from '../../components/number/Number';
@@ -39,7 +39,18 @@ const TestPage = () => {
             navigate(`/score/${answerNo}`);
         }
     }
-    
+
+    function formatter(receivedData) {
+        return receivedData.map(data => ({
+            answers: [data.answer1, data.answer2, data.answer3, data.answer4, data.answer5],
+            correctNo: data.correct_no,
+            images: [data.image1, data.image2, data.image3, data.image4, data.image5],
+            questionDetail: data.question_detail,
+            questionNo: data.question_no
+        }));
+    }
+
+
 
     const [answerList, setAnswerList] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
@@ -58,8 +69,10 @@ const TestPage = () => {
                 });
 
                 const data = await response.json();
-                const getQuizList = data.quizList;
+                const getQuizList = formatter(data.quizList);
                 setQuizList(getQuizList);
+                console.log(getQuizList);
+                console.log(quizList);
 
             } catch (error) {
                 console.error('Error:', error);
@@ -89,6 +102,7 @@ const TestPage = () => {
             const answerNo = data.answerNo;
             setAnswerNo(answerNo);
             console.log(data);
+            console.log(answerNo);
 
         } catch (error) {
             console.error('Error:', error);
@@ -102,19 +116,19 @@ const TestPage = () => {
             <Header/>
             <Number page={page+1}/>
 
-            {quizList.map((val, qidx)=>
+            {Array.isArray(quizList) && quizList.map((val, qidx)=>
             <div className='quizList' style={{display:page===qidx?'flex':'none'}}>
                 <div className='quizLayout'>
                     {page+1}. {val.questionDetail}
                 </div>
                 <div className='answerLayout'>
-                    {val.answers.map((aval, aidx) => (
+                    {Array.isArray(val.answers) && val.answers.map((aval, aidx) => (
                         <TestBlock text={aval}
-                        file={val.images[aidx]}
-                        variant='normal'
-                        onClick={()=>handleCkAnswer(qidx, aidx+1)}
+                                   file={Array.isArray(val.images) ? val.images[aidx] : undefined}
+                                   variant='normal'
+                                   onClick={()=>handleCkAnswer(qidx, aidx+1)}
                         />
-                    ))}
+                        ))}
                 </div>
             </div>
             )}

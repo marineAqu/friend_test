@@ -73,7 +73,7 @@ const ScoreDetailPage = () => {
             <Header/>
             <Number page={page+1} mode='score' resultList={resultList}/>
     
-            {quizList.map((val, qidx)=>
+            {quizList && quizList.map((val, qidx)=>
             <div className='quizList' style={{display:page===qidx?'flex':'none'}}>
                 <div className='quizLayout'>
                     {page+1}. {val.questionDetail}
