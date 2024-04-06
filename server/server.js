@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 const cors = require('cors');
 app.use(cors());
-const sql = require('./sql.js');
+//const sql = require('./sql.js');
 require('dotenv').config();
 
 //app.use('/uploads', static(path.join(__dirname, 'uploads')));
@@ -325,8 +325,8 @@ app.post('/sharepage', async (req, res) => {
 app.post('/maintest', async (req, res) => {
 
     try{
-        let quizname = await sql.findQuizNameByQuizId(req.body.quizId);
-        /*
+        //let quizname = await sql.findQuizNameByQuizId(req.body.quizId);
+
         let quizname = await new Promise((resolve, reject) => {
             connection.query('SELECT quiz_name FROM quiz_list WHERE quiz_id = ?',
                 [req.body.quizId],
@@ -338,9 +338,7 @@ app.post('/maintest', async (req, res) => {
                         resolve(result[0]['quiz_name']);
                     }
                 })
-
         });
-         */
 
         res.json({quizname});
         console.log("마지막 res: " + JSON.stringify({ quizname }));
