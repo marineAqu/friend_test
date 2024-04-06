@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 const cors = require('cors');
 app.use(cors());
+const sql = require('./sql.js');
 require('dotenv').config();
 
 //app.use('/uploads', static(path.join(__dirname, 'uploads')));
@@ -163,10 +164,19 @@ app.post('/scoredetail', async (req, res) => {
 app.post('/score', async (req, res) => {
 
     try {
-        console.log("answerNo test: " + req.body.answerNo);
+        let quizId = await new Promise((resolve, reject) => {
+            connection.query('SELECT quiz_id FROM quiz_answer WHERE no = ?', [req.body.answerNo], function (error, result) {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result[0]['quiz_id']);
+                    console.log("quizname: "+result[0]['quiz_id']);
+                }
+            });
+        });
 
         let quizname = await new Promise((resolve, reject) => {
-            connection.query('SELECT quiz_name FROM quiz_list WHERE quiz_id = (SELECT quiz_id FROM quiz_answer WHERE no = ?)', [req.body.answerNo], function (error, result) {
+            connection.query('SELECT quiz_name FROM quiz_list WHERE quiz_id = ?', [quizId], function (error, result) {
                 if (error) {
                     reject(error);
                 } else {
@@ -187,8 +197,8 @@ app.post('/score', async (req, res) => {
             });
         });
 
-        res.json({ quizname, score });
-        console.log("마지막 res: " + JSON.stringify({ quizname, score }));
+        res.json({ quizname, score, quizId });
+        console.log("마지막 res: " + JSON.stringify({ quizname, score, quizId }));
     } catch (error) {
         console.error("에러 발생: " + error);
         res.status(500).json({ error: "서버 내부 오류 발생" });
@@ -226,6 +236,8 @@ app.post('/getquiz', async (req, res) => {
 
 app.post('/saveAnswer', async (req, res) => {
     try{
+        console.log("req.body.answerList: "+req.body.answerList);
+
         let score = await new Promise((resolve, reject) => {
             let count = 0;
 
@@ -274,7 +286,7 @@ app.post('/saveAnswer', async (req, res) => {
         });
 
         res.json({numNo});
-        console.log("res: "+ JSON.stringify({ numNo }));
+        console.log("saveanswer res: "+ JSON.stringify({ numNo }));
 
     } catch (error) {
         console.error("에러 발생: " + error);
@@ -285,14 +297,13 @@ app.post('/saveAnswer', async (req, res) => {
 app.post('/sharepage', async (req, res) => {
 
     try{
-
         console.log("req출력: "+req.body.quizId);
 
         let nickname = await new Promise((resolve, reject) => {
             connection.query('SELECT quiz_name FROM quiz_list WHERE quiz_id = ?',
                 [req.body.quizId],
                 function (error, result) {
-                    if(error){
+                    if(error) {
                         reject(error);
                     }
                     else{
@@ -314,6 +325,8 @@ app.post('/sharepage', async (req, res) => {
 app.post('/maintest', async (req, res) => {
 
     try{
+        let quizname = await sql.findQuizNameByQuizId(req.body.quizId);
+        /*
         let quizname = await new Promise((resolve, reject) => {
             connection.query('SELECT quiz_name FROM quiz_list WHERE quiz_id = ?',
                 [req.body.quizId],
@@ -327,6 +340,7 @@ app.post('/maintest', async (req, res) => {
                 })
 
         });
+         */
 
         res.json({quizname});
         console.log("마지막 res: " + JSON.stringify({ quizname }));
@@ -339,8 +353,8 @@ app.post('/maintest', async (req, res) => {
 
 app.post('/scoreboard', async (req, res) => {
     try{
-        let answerList = await new Promise((resolve, reject) => {
-            connection.query('SELECT * FROM quiz_answer WHERE quiz_id = ?',
+        let rows = await new Promise((resolve, reject) => {
+            connection.query('SELECT answer_name AS name, score, no FROM quiz_answer WHERE quiz_id = ?',
                 [req.body.quizId],
                 function (error, result) {
                     if(error){
@@ -352,9 +366,8 @@ app.post('/scoreboard', async (req, res) => {
                 });
         });
 
-
-        res.json({answerList});
-        console.log("마지막 res: " + JSON.stringify({ answerList }));
+        res.json({rows});
+        console.log(" scoreboard 마지막 res: " + JSON.stringify({ rows }));
 
     } catch (error) {
         console.error("에러 발생: " + error);
