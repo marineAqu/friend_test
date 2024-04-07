@@ -164,6 +164,8 @@ app.post('/scoredetail', async (req, res) => {
 app.post('/score', async (req, res) => {
 
     try {
+        console.log("score api req.body.answerNo:"+req.body.answerNo);
+
         let quizId = await new Promise((resolve, reject) => {
             connection.query('SELECT quiz_id FROM quiz_answer WHERE no = ?', [req.body.answerNo], function (error, result) {
                 if (error) {
@@ -271,8 +273,8 @@ app.post('/saveAnswer', async (req, res) => {
                 });
         });
 
-        let numNo = await new Promise((resolve, reject) => {
-            connection.query('SELECT * FROM quiz_answer WHERE quiz_id = ? and answer_name = ?',
+        let answerNo = await new Promise((resolve, reject) => {
+            connection.query('SELECT no FROM quiz_answer WHERE quiz_id = ? and answer_name = ?',
                 [req.body.quizId, req.body.answerName],
                 function (error, result) {
                     if(error){
@@ -280,13 +282,13 @@ app.post('/saveAnswer', async (req, res) => {
                     }
                     else{
                         resolve(result[0]['no']);
-                        console.log("numNo: "+result[0]['no']);
+                        console.log("answerNo: "+result[0]['no']);
                     }
                 })
         });
 
-        res.json({answerNo : numNo});
-        console.log("saveanswer res: "+ JSON.stringify({ numNo }));
+        res.json({answerNo});
+        console.log("saveanswer res: "+ JSON.stringify({ answerNo }));
 
     } catch (error) {
         console.error("에러 발생: " + error);
@@ -387,8 +389,6 @@ app.post('/saveMadeQuiz',upload.fields([{ name: 'image_0_0', maxCount: 1 },{ nam
     let uniqueId; //퀴즈 코드
     const name = req.body.name; //작성자 이름
     const quizList = JSON.parse(req.body.quizList);
-
-    console.log("filed에 files 값: "+req.files);
 
 
     //유일한 코드가 나올 때까지 반복
