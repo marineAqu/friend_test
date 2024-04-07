@@ -18,7 +18,10 @@ const TempTestPage = () => {
             const formData = new FormData();
             images.forEach((image, index) => {
                 console.log("image에 값이 들었는지 확인용: "+JSON.stringify(image));
-                formData.append(`image${index + 1}`, image);
+
+                // 파일 이름을 영어로 변경합니다.
+                const newImage = new File([image], `image${index + 1}.jpg`, {type: image.type});
+                formData.append(`image${index + 1}`, newImage);
             });
 
             try {

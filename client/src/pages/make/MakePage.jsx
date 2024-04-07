@@ -78,20 +78,23 @@ const MakePage = () => {
 
     const handleFileInputChange = (event, index, currentPage) => {
         const file = event.target.files[0];
-        if(file){
-            const reader = new FileReader();
-        
-            reader.onload = () => {
-                const imageUrl = reader.result;
-                const updatedQuizList = [...quizList];
-                updatedQuizList[currentPage].images[index] = {
-                    file: file,
-                    imageUrl: imageUrl
-                };
-                setQuizList(updatedQuizList);
-            };
-            reader.readAsDataURL(file);
-        }
+            const updatedQuizList = [...quizList];
+            updatedQuizList[currentPage].images[index] = file;
+            setQuizList(updatedQuizList);
+        // if(file){
+        //     const reader = new FileReader();
+        //
+        //     reader.onload = () => {
+        //         const imageUrl = reader.result;
+        //         const updatedQuizList = [...quizList];
+        //         updatedQuizList[currentPage].images[index] = {
+        //             file: file,
+        //             imageUrl: imageUrl
+        //         };
+        //         setQuizList(updatedQuizList);
+        //     };
+        //     reader.readAsDataURL(file);
+        // }
 
     };
 
@@ -158,6 +161,13 @@ const MakePage = () => {
             const formData = new FormData();
             formData.append('name', name);
             formData.append('quizList', JSON.stringify(quizList));
+            // formData.append(
+            //     'data',
+            //     JSON.stringify({
+            //         name: name,
+            //         quizList: quizList,
+            //     }),
+            // );
 
             // 파일 데이터를 FormData에 추가
             quizList.forEach((quiz, index) => {
@@ -170,8 +180,7 @@ const MakePage = () => {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
+        },
                 body: formData,
             });
 
@@ -235,7 +244,7 @@ const MakePage = () => {
                     <div className="image-container">
                         {quizList[page].images.map((image, index) => (
                             <div key={index}>
-                                <ImagePreview imageUrl={image ? image.imageUrl : null} />
+                                <ImagePreview imageUrl={image ? URL.createObjectURL(image) : null} />
                                 <label htmlFor={`file-${index}`}><div class="btn-upload">이미지 업로드</div></label>
                                 <input
                                     type="file"

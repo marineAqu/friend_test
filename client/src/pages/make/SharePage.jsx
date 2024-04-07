@@ -56,7 +56,7 @@ const SharePage = () => {
 
             const data = await response.json();
             setNickname(data.nickname);
-            setSharelink("http:/3000/" + {quizId})
+            setSharelink(`http://localhost:3000/friend_test/share/${quizId}`)
 
         } catch (error) {
             console.error('Error:', error);

@@ -259,7 +259,7 @@ app.post('/saveAnswer', async (req, res) => {
         });
 
         await new Promise((resolve, reject) => {
-            connection.query('INSERT INTO quiz_answer (quiz_id, answer_name, answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10, score) values (?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ? ,?)',
+            connection.query('INSERT INTO quiz_answer(quiz_id, answer_name, answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10, score) values (?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?)',
                 [req.body.quizId, req.body.answerName, req.body.answerList[0], req.body.answerList[1], req.body.answerList[2], req.body.answerList[3], req.body.answerList[4], req.body.answerList[5], req.body.answerList[6], req.body.answerList[7], req.body.answerList[8], req.body.answerList[9], score],
                 function (error, result) {
                     if(error){
@@ -285,7 +285,7 @@ app.post('/saveAnswer', async (req, res) => {
                 })
         });
 
-        res.json({numNo});
+        res.json({answerNo : numNo});
         console.log("saveanswer res: "+ JSON.stringify({ numNo }));
 
     } catch (error) {
@@ -406,9 +406,9 @@ app.post('/saveMadeQuiz',upload.fields([{ name: 'image_0_0', maxCount: 1 },{ nam
 
     //TODO 퀴즈 내용을 quiz_detail에 저장
     for(let key in quizList){
-        //console.log(quizList[key]);
-        //saveQuizDetail(uniqueId, quizList[key], req.images[key]);
-        //await saveQuizDetail(uniqueId, quizList[key]);
+        // console.log(quizList[key]);
+        // saveQuizDetail(uniqueId, quizList[key], req.images[key]);
+        // await saveQuizDetail(uniqueId, quizList[key]);
     }
 });
 

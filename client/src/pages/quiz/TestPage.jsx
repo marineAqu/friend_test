@@ -26,16 +26,17 @@ const TestPage = () => {
         images: [null, null, null, null, null]
     })));
 
-    const handleCkAnswer = (qidx, aidx) => {
+    const handleCkAnswer = async (qidx, aidx) => {
         const updateAnswerList = [...answerList];
         updateAnswerList[qidx] = aidx;
         setAnswerList(updateAnswerList);
-    
+
         if(page < 9){
             setPage(page+1);
         } else {
             console.log(updateAnswerList);    //체크용
-            handleSubmit();
+            await handleSubmit(updateAnswerList);
+            console.log(answerNo)
             navigate(`/score/${answerNo}`);
         }
     }
@@ -49,8 +50,6 @@ const TestPage = () => {
             questionNo: data.question_no
         }));
     }
-
-
 
     const [answerList, setAnswerList] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
@@ -103,12 +102,10 @@ const TestPage = () => {
             setAnswerNo(answerNo);
             console.log(data);
             console.log(answerNo);
-
         } catch (error) {
             console.error('Error:', error);
         }
     };
-
 
     return(
         <Background>
@@ -117,25 +114,25 @@ const TestPage = () => {
             <Number page={page+1}/>
 
             {Array.isArray(quizList) && quizList.map((val, qidx)=>
-            <div className='quizList' style={{display:page===qidx?'flex':'none'}}>
-                <div className='quizLayout'>
-                    {page+1}. {val.questionDetail}
-                </div>
-                <div className='answerLayout'>
-                    {Array.isArray(val.answers) && val.answers.map((aval, aidx) => (
-                        <TestBlock text={aval}
-                                   file={Array.isArray(val.images) ? val.images[aidx] : undefined}
-                                   variant='normal'
-                                   onClick={()=>handleCkAnswer(qidx, aidx+1)}
-                        />
+                <div className='quizList' style={{display:page===qidx?'flex':'none'}} key={qidx}>
+                    <div className='quizLayout'>
+                        {page+1}. {val.questionDetail}
+                    </div>
+                    <div className='answerLayout'>
+                        {Array.isArray(val.answers) && val.answers.map((aval, aidx) => (
+                            <TestBlock text={aval}
+                                       file={Array.isArray(val.images) ? val.images[aidx] : undefined}
+                                       variant='normal'
+                                       onClick={()=>handleCkAnswer(qidx, aidx+1)}
+                                       key={aidx}
+                            />
                         ))}
+                    </div>
                 </div>
-            </div>
             )}
         </Background>
     );
 
-
-
 }
+
 export default TestPage;

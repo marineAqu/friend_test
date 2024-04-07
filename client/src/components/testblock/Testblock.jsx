@@ -38,7 +38,7 @@ function TestBlock({text, file, variant, onClick}){
         >
             {file && (
                 <div className="image-view" style={{ width: 'auto', maxWidth: '140px', height: '70px', backgroundColor: 'transparent'}}>
-                    <img src={file} alt="Image Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={file} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
             )}
             {text}
