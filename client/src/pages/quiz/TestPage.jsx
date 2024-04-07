@@ -36,8 +36,8 @@ const TestPage = () => {
         } else {
             console.log(updateAnswerList);    //체크용
             await handleSubmit(updateAnswerList);
-            console.log(answerNo)
-            navigate(`/score/${answerNo}`);
+            // console.log(answerNo)
+            // navigate(`/score/${answerNo}`);
         }
     }
 
@@ -102,6 +102,9 @@ const TestPage = () => {
             setAnswerNo(answerNo);
             console.log(data);
             console.log(answerNo);
+
+            navigate(`/score/${answerNo}`);
+
         } catch (error) {
             console.error('Error:', error);
         }
