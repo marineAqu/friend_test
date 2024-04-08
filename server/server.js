@@ -26,10 +26,13 @@ connection.connect();
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads');
+        cb(null, 'C://FTuploads');
+        //cb(null, 'uploads');
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname);
+        //cb(null, file.fieldname + '_' + req.body.name);
+        //cb(null, file.originalname);
+        cb(null, file.fieldname+' '+req.body.name+' '+file.originalname);
     },
     fileFilter: function (req, file, callback){
         var ext = path.extname(file.originalname);
@@ -100,16 +103,6 @@ function saveQuizInfo(name, uniqueId){
         })
 }
 
-//퀴즈 내용 저장
-function saveQuizDetail(uniqueId, quizDetail){
-    connection.query('INSERT INTO quiz_detail (user_no, question_detail, question_no, correct_no, answer1, answer2, answer3, answer4, answer5, image1, image2, image3, image4, image5) values (?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ? ,?)',
-        [uniqueId, quizDetail.questionDetail, quizDetail.questionNo, quizDetail.correctNo, quizDetail.answers[0], quizDetail.answers[1], quizDetail.answers[2], quizDetail.answers[3], quizDetail.answers[4], arr[0], arr[1], arr[2], arr[3], arr[4]],
-        function (error, result) {
-            if(error){
-                throw error;
-            }
-        })
-}
 
 app.post('/scoredetail', async (req, res) => {
 
@@ -375,6 +368,55 @@ app.post('/scoreboard', async (req, res) => {
     }
 });
 
+const asyncForEach = async (array, callback) => {
+    for (let index = 0; index < array.length; index++) {
+        await callback(array[index], index, array);
+    }
+};
+
+app.post('/saveMadeQuiz', upload.fields([
+    { name: 'image_0_0', maxCount: 1 },{ name: 'image_0_1', maxCount: 1 },{ name: 'image_0_2', maxCount: 1 },{ name: 'image_0_3', maxCount: 1 },{ name: 'image_0_4', maxCount: 1 },
+    { name: 'image_1_0', maxCount: 1 },{ name: 'image_1_1', maxCount: 1 },{ name: 'image_1_2', maxCount: 1 },{ name: 'image_1_3', maxCount: 1 },{ name: 'image_1_4', maxCount: 1 },
+    { name: 'image_2_0', maxCount: 1 },{ name: 'image_2_1', maxCount: 1 },{ name: 'image_2_2', maxCount: 1 },{ name: 'image_2_3', maxCount: 1 },{ name: 'image_2_4', maxCount: 1 },
+    { name: 'image_3_0', maxCount: 1 },{ name: 'image_3_1', maxCount: 1 },{ name: 'image_3_2', maxCount: 1 },{ name: 'image_3_3', maxCount: 1 },{ name: 'image_3_4', maxCount: 1 },
+    { name: 'image_4_0', maxCount: 1 },{ name: 'image_4_1', maxCount: 1 },{ name: 'image_4_2', maxCount: 1 },{ name: 'image_4_3', maxCount: 1 },{ name: 'image_4_4', maxCount: 1 },
+    { name: 'image_5_0', maxCount: 1 },{ name: 'image_5_1', maxCount: 1 },{ name: 'image_5_2', maxCount: 1 },{ name: 'image_5_3', maxCount: 1 },{ name: 'image_5_4', maxCount: 1 },
+    { name: 'image_6_0', maxCount: 1 },{ name: 'image_6_1', maxCount: 1 },{ name: 'image_6_2', maxCount: 1 },{ name: 'image_6_3', maxCount: 1 },{ name: 'image_6_4', maxCount: 1 },
+    { name: 'image_7_0', maxCount: 1 },{ name: 'image_7_1', maxCount: 1 },{ name: 'image_7_2', maxCount: 1 },{ name: 'image_7_3', maxCount: 1 },{ name: 'image_7_4', maxCount: 1 },
+    { name: 'image_8_0', maxCount: 1 },{ name: 'image_8_1', maxCount: 1 },{ name: 'image_8_2', maxCount: 1 },{ name: 'image_8_3', maxCount: 1 },{ name: 'image_8_4', maxCount: 1 },
+    { name: 'image_9_0', maxCount: 1 },{ name: 'image_9_1', maxCount: 1 },{ name: 'image_9_2', maxCount: 1 },{ name: 'image_9_3', maxCount: 1 },{ name: 'image_9_4', maxCount: 1 }
+]), async (req, res) => {
+    try {
+        let uniqueId; //퀴즈 코드
+        const name = req.body.name; //작성자 이름
+        const quizList = JSON.parse(req.body.quizList);
+
+        // Generate unique ID
+        while (1) {
+            uniqueId = await isUniqueId();
+            if (uniqueId !== 0) {
+                console.log("uniqueId가 유일: " + uniqueId);
+                break;
+            }
+        }
+
+        // quizList테이블에 insert
+        await saveQuizInfo(name, uniqueId);
+
+        // Insert quiz details
+        await asyncForEach(Object.keys(quizList), async (key) => {
+            await connection.query(
+                'INSERT INTO quiz_detail (user_no, question_detail, question_no, correct_no, answer1, answer2, answer3, answer4, answer5, image1, image2, image3, image4, image5) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                [uniqueId, quizList[key].questionDetail, quizList[key].questionNo, quizList[key].correctNo, quizList[key].answers[0], quizList[key].answers[1], quizList[key].answers[2], quizList[key].answers[3], quizList[key].answers[4], req.files[`image_${key}_0`][0].filename, req.files[`image_${key}_1`][0].filename, req.files[`image_${key}_2`][0].filename, req.files[`image_${key}_3`][0].filename, req.files[`image_${key}_4`][0].filename]
+            );
+        });
+    } catch (error) {
+        console.error("Error saving quiz:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+/*
 app.post('/saveMadeQuiz',upload.fields([{ name: 'image_0_0', maxCount: 1 },{ name: 'image_0_1', maxCount: 1 },{ name: 'image_0_2', maxCount: 1 },{ name: 'image_0_3', maxCount: 1 },{ name: 'image_0_4', maxCount: 1 },
     { name: 'image_1_0', maxCount: 1 },{ name: 'image_1_1', maxCount: 1 },{ name: 'image_1_2', maxCount: 1 },{ name: 'image_1_3', maxCount: 1 },{ name: 'image_1_4', maxCount: 1 },
     { name: 'image_2_0', maxCount: 1 },{ name: 'image_2_1', maxCount: 1 },{ name: 'image_2_2', maxCount: 1 },{ name: 'image_2_3', maxCount: 1 },{ name: 'image_2_4', maxCount: 1 },
@@ -390,6 +432,8 @@ app.post('/saveMadeQuiz',upload.fields([{ name: 'image_0_0', maxCount: 1 },{ nam
     const name = req.body.name; //작성자 이름
     const quizList = JSON.parse(req.body.quizList);
 
+    //console.log("파일명 전달되는지: "+req.files.filename);
+
 
     //유일한 코드가 나올 때까지 반복
     while (1) {
@@ -404,13 +448,16 @@ app.post('/saveMadeQuiz',upload.fields([{ name: 'image_0_0', maxCount: 1 },{ nam
     //유일한 코드라면 quiz_list 테이블에 저장
     await saveQuizInfo(name, uniqueId);
 
-    //TODO 퀴즈 내용을 quiz_detail에 저장
     for(let key in quizList){
-        // console.log(quizList[key]);
-        // saveQuizDetail(uniqueId, quizList[key], req.images[key]);
-        // await saveQuizDetail(uniqueId, quizList[key]);
+        connection.query('INSERT INTO quiz_detail (user_no, question_detail, question_no, correct_no, answer1, answer2, answer3, answer4, answer5, image1, image2, image3, image4, image5) values (?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ? ,?)',
+            [uniqueId, quizList[key].questionDetail, quizList[key].questionNo, quizList[key].correctNo, quizList[key].answers[0], quizList[key].answers[1], quizList[key].answers[2], quizList[key].answers[3], quizList[key].answers[4], req.files['image_0_0'][0].filename, req.files['image_0_0'][0].filename, req.files['image_0_0'][0].filename, req.files['image_0_0'][0].filename, req.files['image_0_0'][0].filename],
+            function (error, result) {
+                if(error){
+                    throw error;
+                }
+            })
     }
-});
+});*/
 
 app.post('/tempTest', upload.fields([{ name: 'image1', maxCount: 1 }, { name: 'image2', maxCount: 1 }]), function (req, res) {
     res.json({message: '이미지 업로드 성공'});
