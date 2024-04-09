@@ -1,40 +1,40 @@
-import styled, { css } from "styled-components";
+import styled, {css} from "styled-components";
 
 
 const StyledButton = styled.button`
-    ${({ variantStyle }) => variantStyle}
+  ${({variantStyle}) => variantStyle}
 
-    font-family: 'seoul-m';
-    width: 340px;
-    height: 48px;
-    font-size: 20px;
-    display: block;
-    margin:0;
-    cursor: pointer;
-    color: var(--button-color);
-    font-weight: 400;
-    border: var(--button-border);
-    border-radius: 10px;
+  font-family: 'seoul-m';
+  width: 340px;
+  height: 48px;
+  font-size: 20px;
+  display: block;
+  margin: 0;
+  cursor: pointer;
+  color: var(--button-color);
+  font-weight: 400;
+  border: var(--button-border);
+  border-radius: 10px;
 
-    &:active,
-    &:hover,
-    &:focus {
+  &:active,
+  &:hover,
+  &:focus {
     background: var(--button-hover-bg-color, #025ce2);
-    }
+  }
 
-    &:not(:disabled) {
-        background-color: var(--button-bg-color);
-    }
+  &:not(:disabled) {
+    background-color: var(--button-bg-color);
+  }
 
-    &:disabled {
+  &:disabled {
     cursor: default;
     opacity: 0.5;
     background: var(--button-bg-color, #025ce2);
-    }
+  }
 `;
 
 
-function DefaultButton({ text, onClick, variant, disabled }) {
+function DefaultButton({text, onClick, variant, disabled}) {
     const variantStyle = VARIANTS[variant];
 
 
@@ -48,24 +48,36 @@ function DefaultButton({ text, onClick, variant, disabled }) {
 }
 
 const VARIANTS = {
-  normal: css`
-    --button-color: black;
-    --button-bg-color: gainsboro;
-    --button-hover-bg-color: #b0b0b0; /* hover 시 배경색 변수 추가 */
-    --button-border: 1px solid black;
-  `,
-  grey: css`
-    --button-color: #ffffff;
-    --button-bg-color: #808080;
-    --button-hover-bg-color: #a9a9a9; /* hover 시 배경색 변수 추가 */
-    --button-border: 1px solid black;
-  `,
-  blue: css`
-    --button-color: azure;
-    --button-bg-color: rgb(83, 138, 231);
-    --button-hover-bg-color: #708090; /* hover 시 배경색 변수 추가 */
-    --button-border: none;
-  `,
+    normal: css`
+      --button-color: black;
+      --button-bg-color: gainsboro;
+      --button-hover-bg-color: #b0b0b0; /* hover 시 배경색 변수 추가 */
+      --button-border: 1px solid black;
+    `,
+    black: css`
+      --button-color: white;
+      --button-bg-color: black;
+      --button-hover-bg-color: #808080;
+      --button-border: 1px solid white;
+    `,
+    grey: css`
+      --button-color: #ffffff;
+      --button-bg-color: #808080;
+      --button-hover-bg-color: #a9a9a9; /* hover 시 배경색 변수 추가 */
+      --button-border: 1px solid black;
+    `,
+    blue: css`
+      --button-color: azure;
+      --button-bg-color: rgb(83, 138, 231);
+      --button-hover-bg-color: #708090; /* hover 시 배경색 변수 추가 */
+      --button-border: none;
+    `,
+    red: css`
+    --button-color: white;
+    --button-bg-color: #FF7F7F;
+    --button-hover-bg-color: #FF9E9E;
+    --button-border: 1px solid 
+    `
 };
 
 

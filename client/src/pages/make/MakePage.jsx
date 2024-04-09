@@ -116,8 +116,8 @@ const MakePage = () => {
     const navigate = useNavigate();
 
     // quizId 기본값 손보기
-    const handlePush = () => {
-        navigate("/share/" + quizId);
+    const handlePush = (getQuizId) => {
+        navigate("/share/" + getQuizId);
     }
 
     const makeRandomQuiz = () => {
@@ -159,9 +159,6 @@ const MakePage = () => {
             /*
             localStorage.setItem('userId', myCode);
             */
-
-
-            handlePush();
         }
     };
 
@@ -194,8 +191,8 @@ const MakePage = () => {
             });
 
             const data = await response.json();
-            const quizId = data.id;
-            setQuizId(quizId);
+            const quizId = data.quizId;
+            handlePush(quizId);
 
             console.log(data);
         } catch (error) {

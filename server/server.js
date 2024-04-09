@@ -418,6 +418,11 @@ app.post('/saveMadeQuiz', upload.fields([
                 [uniqueId, quizList[key].questionDetail, quizList[key].questionNo, quizList[key].correctNo, quizList[key].answers[0], quizList[key].answers[1], quizList[key].answers[2], quizList[key].answers[3], quizList[key].answers[4], image1, image2, image3, image4, image5]
             );
         });
+
+        // 모든 데이터베이스 작업이 완료된 후
+        res.json({ quizId: uniqueId });
+        console.log(uniqueId)
+
     } catch (error) {
         console.error("Error saving quiz:", error);
         res.status(500).send("Internal Server Error");

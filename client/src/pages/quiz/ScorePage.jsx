@@ -11,7 +11,7 @@ import "./ScorePage.css";
 
 const ScorePage = () => {
     const { answerNo } = useParams(); // 경로
-    //const [quizId, setQuizId] = useState(0);
+    const [quizId, setQuizId] = useState(0);
     const [score, setScore] = useState(0);
     const [quizname, setQuizName] = useState('민호');
 
@@ -30,7 +30,7 @@ const ScorePage = () => {
                 });
 
                 const data = await response.json();
-                //setQuizId(data.quizId);
+                setQuizId(data.quizId);
                 setScore(data.score);
                 setQuizName(data.quizname);
 
@@ -53,6 +53,11 @@ const ScorePage = () => {
         navigate("/main/make");
     }
 
+    const handleTestAgain = () => {
+        navigate("/main/test/" + quizId);
+    }
+
+
 
     return(
         <Background>
@@ -68,7 +73,8 @@ const ScorePage = () => {
                 <DefaultButton text="채점 결과 확인하기" variant='normal' onClick={handleShowDetail} />
                 <h2>결과 공유하기</h2>
                 <ShareLinkButton link={`http://localhost:3000/friend_test/score/${answerNo}`} />
-                <DefaultButton text="새로운 능력고사 만들러 가기" variant='normal' onClick={handlePush} />
+                <DefaultButton text="테스트 다시풀기" variant='blue' onClick={handleTestAgain} />
+                <DefaultButton text="새로운 능력고사 만들러 가기" variant='red' onClick={handlePush} />
 
             </div>
         </Background>
