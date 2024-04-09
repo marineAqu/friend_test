@@ -405,9 +405,17 @@ app.post('/saveMadeQuiz', upload.fields([
 
         // Insert quiz details
         await asyncForEach(Object.keys(quizList), async (key) => {
+            //TODO: 이미지가 없을 경우 null 처리
+            const imageFiles = req.files;
+            const image1 = imageFiles && imageFiles[`image_${key}_0`] ? imageFiles[`image_${key}_0`][0].filename : null;
+            const image2 = imageFiles && imageFiles[`image_${key}_1`] ? imageFiles[`image_${key}_1`][0].filename : null;
+            const image3 = imageFiles && imageFiles[`image_${key}_2`] ? imageFiles[`image_${key}_2`][0].filename : null;
+            const image4 = imageFiles && imageFiles[`image_${key}_3`] ? imageFiles[`image_${key}_3`][0].filename : null;
+            const image5 = imageFiles && imageFiles[`image_${key}_4`] ? imageFiles[`image_${key}_4`][0].filename : null;
+
             await connection.query(
                 'INSERT INTO quiz_detail (user_no, question_detail, question_no, correct_no, answer1, answer2, answer3, answer4, answer5, image1, image2, image3, image4, image5) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                [uniqueId, quizList[key].questionDetail, quizList[key].questionNo, quizList[key].correctNo, quizList[key].answers[0], quizList[key].answers[1], quizList[key].answers[2], quizList[key].answers[3], quizList[key].answers[4], req.files[`image_${key}_0`][0].filename, req.files[`image_${key}_1`][0].filename, req.files[`image_${key}_2`][0].filename, req.files[`image_${key}_3`][0].filename, req.files[`image_${key}_4`][0].filename]
+                [uniqueId, quizList[key].questionDetail, quizList[key].questionNo, quizList[key].correctNo, quizList[key].answers[0], quizList[key].answers[1], quizList[key].answers[2], quizList[key].answers[3], quizList[key].answers[4], image1, image2, image3, image4, image5]
             );
         });
     } catch (error) {
