@@ -1,4 +1,8 @@
 //server.js
+const AWS = require('aws-sdk');
+const path = require('path');
+require("aws-sdk/lib/maintenance_mode_message").suppress = true;
+const multerS3 = require('multer-s3');
 const express = require('express');
 const app = express();
 let multer = require("multer");
@@ -24,6 +28,15 @@ const connection = mysql.createConnection({
 });
 connection.connect();
 
+AWS.config.update({
+    region: 'ap-northeast-2',
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_KEY
+});
+
+const s3 = new AWS.S3();
+
+/*
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'C://FTuploads');
@@ -45,8 +58,25 @@ var storage = multer.diskStorage({
         fileSize: 1024 * 1024,
     },
 });
+ */
 
-var upload = multer({
+const allowedExtensions =['.png', '.jpg', '.jpeg', '.bmp'];
+
+const storage = multerS3({
+    s3: s3,
+    bucket: process.env.BUCKET_NAME,
+    key: (req, file, callback) => {
+        const uploadDirectory = req.query.directory ?? ''
+        //const extension = path.extname(file.orginalname)
+        //if(!allowedExtensions.includes(extension)) {
+        //    return callback(new Error('wrong extension'))
+        //}
+        callback(null, `${uploadDirectory}/${Date.now()}_${file.orginalname}`)
+    },
+    acl: 'public-read-write'
+});
+
+const upload = multer({
     storage: storage
 });
 
@@ -421,7 +451,7 @@ app.post('/saveMadeQuiz', upload.fields([
 
         // 모든 데이터베이스 작업이 완료된 후
         res.json({ quizId: uniqueId });
-        console.log(uniqueId)
+        console.log(uniqueId);
 
     } catch (error) {
         console.error("Error saving quiz:", error);
