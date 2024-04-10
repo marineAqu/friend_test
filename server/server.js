@@ -65,13 +65,14 @@ const allowedExtensions =['.png', '.jpg', '.jpeg', '.bmp'];
 const storage = multerS3({
     s3: s3,
     bucket: process.env.BUCKET_NAME,
-    key: (req, file, callback) => {
-        const uploadDirectory = req.query.directory ?? ''
-        //const extension = path.extname(file.orginalname)
+    key: function (req, file, callback) {
+        //const uploadDirectory = req.query.directory ?? ''
+        const uploadDirectory = '';
+        //const extension = path.extname(file.originalname)
         //if(!allowedExtensions.includes(extension)) {
         //    return callback(new Error('wrong extension'))
         //}
-        callback(null, `${uploadDirectory}/${Date.now()}_${file.orginalname}`)
+        callback(null, `${uploadDirectory}/${Date.now()}_${file.fieldname}_${file.originalname}`)
     },
     acl: 'public-read-write'
 });
@@ -437,11 +438,11 @@ app.post('/saveMadeQuiz', upload.fields([
         await asyncForEach(Object.keys(quizList), async (key) => {
             //TODO: 이미지가 없을 경우 null 처리
             const imageFiles = req.files;
-            const image1 = imageFiles && imageFiles[`image_${key}_0`] ? imageFiles[`image_${key}_0`][0].filename : null;
-            const image2 = imageFiles && imageFiles[`image_${key}_1`] ? imageFiles[`image_${key}_1`][0].filename : null;
-            const image3 = imageFiles && imageFiles[`image_${key}_2`] ? imageFiles[`image_${key}_2`][0].filename : null;
-            const image4 = imageFiles && imageFiles[`image_${key}_3`] ? imageFiles[`image_${key}_3`][0].filename : null;
-            const image5 = imageFiles && imageFiles[`image_${key}_4`] ? imageFiles[`image_${key}_4`][0].filename : null;
+            const image1 = imageFiles && imageFiles[`image_${key}_0`] ? imageFiles[`image_${key}_0`][0].location : null;
+            const image2 = imageFiles && imageFiles[`image_${key}_1`] ? imageFiles[`image_${key}_1`][0].location : null;
+            const image3 = imageFiles && imageFiles[`image_${key}_2`] ? imageFiles[`image_${key}_2`][0].location : null;
+            const image4 = imageFiles && imageFiles[`image_${key}_3`] ? imageFiles[`image_${key}_3`][0].location : null;
+            const image5 = imageFiles && imageFiles[`image_${key}_4`] ? imageFiles[`image_${key}_4`][0].location : null;
 
             await connection.query(
                 'INSERT INTO quiz_detail (user_no, question_detail, question_no, correct_no, answer1, answer2, answer3, answer4, answer5, image1, image2, image3, image4, image5) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
