@@ -11,7 +11,7 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 const cors = require('cors');
 app.use(cors());
-//const sql = require('./sql.js');
+const service = require('./service.js');
 require('dotenv').config();
 
 //app.use('/uploads', static(path.join(__dirname, 'uploads')));
@@ -35,30 +35,6 @@ AWS.config.update({
 });
 
 const s3 = new AWS.S3();
-
-/*
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'C://FTuploads');
-        //cb(null, 'uploads');
-    },
-    filename: function (req, file, cb) {
-        //cb(null, file.fieldname + '_' + req.body.name);
-        //cb(null, file.originalname);
-        cb(null, file.fieldname+' '+req.body.name+' '+file.originalname);
-    },
-    fileFilter: function (req, file, callback){
-        var ext = path.extname(file.originalname);
-        if(ext !== ".png" && ext !== "jpg" && ext !== ".jpeg"){
-            return callback(new Error("PNG, JPG만 업로드하세요."));
-        }
-        callback(null, true);
-    },
-    limits: {
-        fileSize: 1024 * 1024,
-    },
-});
- */
 
 const allowedExtensions =['.png', '.jpg', '.jpeg', '.bmp'];
 
@@ -201,16 +177,7 @@ app.post('/score', async (req, res) => {
             });
         });
 
-        let quizname = await new Promise((resolve, reject) => {
-            connection.query('SELECT quiz_name FROM quiz_list WHERE quiz_id = ?', [quizId], function (error, result) {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(result[0]['quiz_name']);
-                    console.log("quizname: "+result[0]['quiz_name']);
-                }
-            });
-        });
+        let quizname = await service.getQuizName(quizId);
 
         let score = await new Promise((resolve, reject) => {
             connection.query('SELECT score FROM quiz_answer WHERE no = ?', [req.body.answerNo], function (error, result) {
@@ -323,24 +290,10 @@ app.post('/saveAnswer', async (req, res) => {
 app.post('/sharepage', async (req, res) => {
 
     try{
-        console.log("req출력: "+req.body.quizId);
-
-        let nickname = await new Promise((resolve, reject) => {
-            connection.query('SELECT quiz_name FROM quiz_list WHERE quiz_id = ?',
-                [req.body.quizId],
-                function (error, result) {
-                    if(error) {
-                        reject(error);
-                    }
-                    else{
-                        resolve(result[0]['quiz_name']);
-                    }
-                })
-
-        });
+        const nickname = await service.getQuizName(req.body.quizId);
 
         res.json({nickname});
-        console.log("마지막 res: " + JSON.stringify({ nickname }));
+        console.log("sharepage nickname: " + JSON.stringify({ nickname }));
 
     } catch (error) {
         console.error("에러 발생: " + error);
@@ -351,20 +304,7 @@ app.post('/sharepage', async (req, res) => {
 app.post('/maintest', async (req, res) => {
 
     try{
-        //let quizname = await sql.findQuizNameByQuizId(req.body.quizId);
-
-        let quizname = await new Promise((resolve, reject) => {
-            connection.query('SELECT quiz_name FROM quiz_list WHERE quiz_id = ?',
-                [req.body.quizId],
-                function (error, result) {
-                    if(error){
-                        reject(error);
-                    }
-                    else{
-                        resolve(result[0]['quiz_name']);
-                    }
-                })
-        });
+        const quizname = await service.getQuizName(req.body.quizId);
 
         res.json({quizname});
         console.log("마지막 res: " + JSON.stringify({ quizname }));
@@ -460,48 +400,6 @@ app.post('/saveMadeQuiz', upload.fields([
     }
 });
 
-/*
-app.post('/saveMadeQuiz',upload.fields([{ name: 'image_0_0', maxCount: 1 },{ name: 'image_0_1', maxCount: 1 },{ name: 'image_0_2', maxCount: 1 },{ name: 'image_0_3', maxCount: 1 },{ name: 'image_0_4', maxCount: 1 },
-    { name: 'image_1_0', maxCount: 1 },{ name: 'image_1_1', maxCount: 1 },{ name: 'image_1_2', maxCount: 1 },{ name: 'image_1_3', maxCount: 1 },{ name: 'image_1_4', maxCount: 1 },
-    { name: 'image_2_0', maxCount: 1 },{ name: 'image_2_1', maxCount: 1 },{ name: 'image_2_2', maxCount: 1 },{ name: 'image_2_3', maxCount: 1 },{ name: 'image_2_4', maxCount: 1 },
-    { name: 'image_3_0', maxCount: 1 },{ name: 'image_3_1', maxCount: 1 },{ name: 'image_3_2', maxCount: 1 },{ name: 'image_3_3', maxCount: 1 },{ name: 'image_3_4', maxCount: 1 },
-    { name: 'image_4_0', maxCount: 1 },{ name: 'image_4_1', maxCount: 1 },{ name: 'image_4_2', maxCount: 1 },{ name: 'image_4_3', maxCount: 1 },{ name: 'image_4_4', maxCount: 1 },
-    { name: 'image_5_0', maxCount: 1 },{ name: 'image_5_1', maxCount: 1 },{ name: 'image_5_2', maxCount: 1 },{ name: 'image_5_3', maxCount: 1 },{ name: 'image_5_4', maxCount: 1 },
-    { name: 'image_6_0', maxCount: 1 },{ name: 'image_6_1', maxCount: 1 },{ name: 'image_6_2', maxCount: 1 },{ name: 'image_6_3', maxCount: 1 },{ name: 'image_6_4', maxCount: 1 },
-    { name: 'image_7_0', maxCount: 1 },{ name: 'image_7_1', maxCount: 1 },{ name: 'image_7_2', maxCount: 1 },{ name: 'image_7_3', maxCount: 1 },{ name: 'image_7_4', maxCount: 1 },
-    { name: 'image_8_0', maxCount: 1 },{ name: 'image_8_1', maxCount: 1 },{ name: 'image_8_2', maxCount: 1 },{ name: 'image_8_3', maxCount: 1 },{ name: 'image_8_4', maxCount: 1 },
-    { name: 'image_9_0', maxCount: 1 },{ name: 'image_9_1', maxCount: 1 },{ name: 'image_9_2', maxCount: 1 },{ name: 'image_9_3', maxCount: 1 },{ name: 'image_9_4', maxCount: 1 }]),async (req, res) => {
-
-    let uniqueId; //퀴즈 코드
-    const name = req.body.name; //작성자 이름
-    const quizList = JSON.parse(req.body.quizList);
-
-    //console.log("파일명 전달되는지: "+req.files.filename);
-
-
-    //유일한 코드가 나올 때까지 반복
-    while (1) {
-        uniqueId = await isUniqueId();
-
-        if (uniqueId !== 0) {
-            console.log("uniqueId가 유일: " + uniqueId);
-            break;
-        }
-    }
-
-    //유일한 코드라면 quiz_list 테이블에 저장
-    await saveQuizInfo(name, uniqueId);
-
-    for(let key in quizList){
-        connection.query('INSERT INTO quiz_detail (user_no, question_detail, question_no, correct_no, answer1, answer2, answer3, answer4, answer5, image1, image2, image3, image4, image5) values (?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ? ,?)',
-            [uniqueId, quizList[key].questionDetail, quizList[key].questionNo, quizList[key].correctNo, quizList[key].answers[0], quizList[key].answers[1], quizList[key].answers[2], quizList[key].answers[3], quizList[key].answers[4], req.files['image_0_0'][0].filename, req.files['image_0_0'][0].filename, req.files['image_0_0'][0].filename, req.files['image_0_0'][0].filename, req.files['image_0_0'][0].filename],
-            function (error, result) {
-                if(error){
-                    throw error;
-                }
-            })
-    }
-});*/
 
 app.post('/tempTest', upload.fields([{ name: 'image1', maxCount: 1 }, { name: 'image2', maxCount: 1 }]), function (req, res) {
     res.json({message: '이미지 업로드 성공'});
