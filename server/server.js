@@ -14,19 +14,10 @@ app.use(cors());
 const service = require('./service.js');
 require('dotenv').config();
 
-//app.use('/uploads', static(path.join(__dirname, 'uploads')));
 app.use(express.urlencoded({ extended: false }));
 
-const mysql = require('mysql');
 const {response, json} = require("express");
 const {readFileSync} = require("fs");
-const connection = mysql.createConnection({
-    host: process.env.HOST,
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE
-});
-connection.connect();
 
 AWS.config.update({
     region: 'ap-northeast-2',
@@ -64,93 +55,14 @@ app.listen(port, () => {
     console.log(`Listening on port ${port}`);
 })
 
-function generateUniqueUserId(){
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let userId = '';
-
-    for (let i = 0; i < 6; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        userId += characters.charAt(randomIndex);
-    }
-
-    return userId;
-}
-
-function isUniqueId(){
-    let uniqueId;
-    uniqueId = generateUniqueUserId();
-    console.log(uniqueId);
-    //유일한 키가 될 때까지 무한 반복
-
-    connection.query('SELECT EXISTS(SELECT 1 FROM quiz_list WHERE quiz_id = ?) as exist', [uniqueId],
-        function (error, result) {
-            if(error){
-                throw error;
-            }
-            else{
-                //유일한 키인 경우
-                if(result[0]['exist'] === 0) {
-                    //return uniqueId;
-                }
-                else uniqueId = 0;
-                //console.log("else문 안: "+result[0]['exist']);
-                //break;
-            }
-        })
-    return uniqueId;
-}
-
-function saveQuizInfo(name, uniqueId){
-    connection.query('INSERT INTO quiz_list (quiz_name, quiz_id) values (?, ?)',
-        [name, uniqueId],
-        function (error, result) {
-            if(error){
-                throw error;
-            }
-        })
-}
-
-
 app.post('/scoredetail', async (req, res) => {
 
     try {
-        console.log("answerNo test: " + req.body.answerNo);
-        console.log("req.body 출력 결과: " + JSON.stringify(req.body)); // {} 라고 출력됨
-
-        let quizCode = await new Promise((resolve, reject) => {
-            connection.query('SELECT quiz_id FROM quiz_answer WHERE no = ?', [req.body.answerNo], function (error, result) {
-                if (error) {
-                    reject(error);
-                } else {
-                    console.log("첫번째 쿼리 결과: " + result[0]['quiz_id']);
-                    resolve(result[0]['quiz_id']);
-                }
-            });
-        });
-
+        const quizCode = await service.getQuizId(req.body.answerNo);
         //quizList 반환
-        let quizList = await new Promise((resolve, reject) => {
-            connection.query('SELECT * FROM quiz_detail WHERE user_no = ?', [quizCode], function (error, result) {
-                if (error) {
-                    reject(error);
-                } else {
-                    console.log("두번째 쿼리 결과: " + JSON.stringify(result));
-                    resolve(result);
-                }
-            });
-        });
-
+        const quizList = await service.getQuizDetailList(quizCode);
         //answerList 반환
-        let answerList = await new Promise((resolve, reject) => {
-            connection.query('SELECT answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10 FROM quiz_answer WHERE no = ?', [req.body.answerNo], function (error, result) {
-                if (error) {
-                    reject(error);
-                } else {
-                    console.log("세번째 쿼리 결과: " + JSON.stringify(result));
-                    resolve(result[0]);
-                }
-            });
-        });
+        const answerList = await service.getAnswerList(req.body.answerNo);
 
         console.log("마지막 res: " + JSON.stringify({ quizList, answerList }));
         res.json({ quizList, answerList });
@@ -166,29 +78,9 @@ app.post('/score', async (req, res) => {
     try {
         console.log("score api req.body.answerNo:"+req.body.answerNo);
 
-        let quizId = await new Promise((resolve, reject) => {
-            connection.query('SELECT quiz_id FROM quiz_answer WHERE no = ?', [req.body.answerNo], function (error, result) {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(result[0]['quiz_id']);
-                    console.log("quizname: "+result[0]['quiz_id']);
-                }
-            });
-        });
-
-        let quizname = await service.getQuizName(quizId);
-
-        let score = await new Promise((resolve, reject) => {
-            connection.query('SELECT score FROM quiz_answer WHERE no = ?', [req.body.answerNo], function (error, result) {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(result[0]['score']);
-                    console.log("score: "+result[0]['score']);
-                }
-            });
-        });
+        const quizId = await service.getQuizId(req.body.answerNo);
+        const quizname = await service.getQuizName(quizId);
+        const score = await service.getScore(req.body.answerNo);
 
         res.json({ quizname, score, quizId });
         console.log("마지막 res: " + JSON.stringify({ quizname, score, quizId }));
@@ -204,18 +96,7 @@ app.post('/getquiz', async (req, res) => {
     try{
         console.log("req.body.quizId의 값: "+req.body.quizId);
 
-        let quizList = await new Promise((resolve, reject) => {
-            connection.query('SELECT * FROM quiz_detail WHERE user_no = ? ORDER BY question_no',
-                [req.body.quizId],
-                function (error, result) {
-                    if(error){
-                        reject(error);
-                    }
-                    else{
-                        resolve(result);
-                    }
-                });
-        });
+        const quizList = await service.getQuizDetailList(req.body.quizId);
 
         res.json({quizList});
         console.log("마지막 res: " + JSON.stringify({ quizList }));
@@ -231,52 +112,11 @@ app.post('/saveAnswer', async (req, res) => {
     try{
         console.log("req.body.answerList: "+req.body.answerList);
 
-        let score = await new Promise((resolve, reject) => {
-            let count = 0;
+        const score = await service.countScore(req.body.quizId);
 
-            connection.query('SELECT correct_no FROM quiz_detail WHERE user_no = ? ORDER BY question_no',
-                [req.body.quizId],
-                function (error, result) {
-                    if(error){
-                        reject(error);
-                    }
-                    else{
-                        for(let i=0; i<10; i++){
-                            if(result[i]['correct_no'] === req.body.answerList[i]) count++;
-                        }
+        await service.insertQuizAnswer(req.body.quizId, req.body.answerName, req.body.answerList, score);
 
-                        console.log("count: "+count);
-                        resolve(count);
-                    }
-                });
-        });
-
-        await new Promise((resolve, reject) => {
-            connection.query('INSERT INTO quiz_answer(quiz_id, answer_name, answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10, score) values (?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?)',
-                [req.body.quizId, req.body.answerName, req.body.answerList[0], req.body.answerList[1], req.body.answerList[2], req.body.answerList[3], req.body.answerList[4], req.body.answerList[5], req.body.answerList[6], req.body.answerList[7], req.body.answerList[8], req.body.answerList[9], score],
-                function (error, result) {
-                    if(error){
-                        reject(error);
-                    }
-                    else{
-                        resolve();
-                    }
-                });
-        });
-
-        let answerNo = await new Promise((resolve, reject) => {
-            connection.query('SELECT no FROM quiz_answer WHERE quiz_id = ? and answer_name = ?',
-                [req.body.quizId, req.body.answerName],
-                function (error, result) {
-                    if(error){
-                        reject(error);
-                    }
-                    else{
-                        resolve(result[0]['no']);
-                        console.log("answerNo: "+result[0]['no']);
-                    }
-                })
-        });
+        const answerNo = await service.getnoFromQuizAnswer(req.body.quizId, req.body.answerName);
 
         res.json({answerNo});
         console.log("saveanswer res: "+ JSON.stringify({ answerNo }));
@@ -317,18 +157,7 @@ app.post('/maintest', async (req, res) => {
 
 app.post('/scoreboard', async (req, res) => {
     try{
-        let rows = await new Promise((resolve, reject) => {
-            connection.query('SELECT answer_name AS name, score, no FROM quiz_answer WHERE quiz_id = ?',
-                [req.body.quizId],
-                function (error, result) {
-                    if(error){
-                        reject(error);
-                    }
-                    else{
-                        resolve(result);
-                    }
-                });
-        });
+        const rows = await service.getAnswerNameAndScore(req.body.quizId);
 
         res.json({rows});
         console.log(" scoreboard 마지막 res: " + JSON.stringify({ rows }));
@@ -362,17 +191,11 @@ app.post('/saveMadeQuiz', upload.fields([
         const name = req.body.name; //작성자 이름
         const quizList = JSON.parse(req.body.quizList);
 
-        // Generate unique ID
-        while (1) {
-            uniqueId = await isUniqueId();
-            if (uniqueId !== 0) {
-                console.log("uniqueId가 유일: " + uniqueId);
-                break;
-            }
-        }
+        //unique ID 생성
+        uniqueId = await service.isUniqueId();
 
         // quizList테이블에 insert
-        await saveQuizInfo(name, uniqueId);
+        await service.insertQuizList(name, uniqueId);
 
         // Insert quiz details
         await asyncForEach(Object.keys(quizList), async (key) => {
@@ -384,15 +207,12 @@ app.post('/saveMadeQuiz', upload.fields([
             const image4 = imageFiles && imageFiles[`image_${key}_3`] ? imageFiles[`image_${key}_3`][0].location : null;
             const image5 = imageFiles && imageFiles[`image_${key}_4`] ? imageFiles[`image_${key}_4`][0].location : null;
 
-            await connection.query(
-                'INSERT INTO quiz_detail (user_no, question_detail, question_no, correct_no, answer1, answer2, answer3, answer4, answer5, image1, image2, image3, image4, image5) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                [uniqueId, quizList[key].questionDetail, quizList[key].questionNo, quizList[key].correctNo, quizList[key].answers[0], quizList[key].answers[1], quizList[key].answers[2], quizList[key].answers[3], quizList[key].answers[4], image1, image2, image3, image4, image5]
-            );
+            await service.insertQuizDetail(uniqueId, quizList[key], image1, image2, image3, image4, image5);
         });
 
         // 모든 데이터베이스 작업이 완료된 후
         res.json({ quizId: uniqueId });
-        console.log(uniqueId);
+        console.log("퀴즈 생성 res:"+ uniqueId);
 
     } catch (error) {
         console.error("Error saving quiz:", error);
