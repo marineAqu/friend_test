@@ -17,7 +17,6 @@ require('dotenv').config();
 app.use(express.urlencoded({ extended: false }));
 
 const {response, json} = require("express");
-const {readFileSync} = require("fs");
 
 AWS.config.update({
     region: 'ap-northeast-2',
@@ -187,12 +186,9 @@ app.post('/saveMadeQuiz', upload.fields([
     { name: 'image_9_0', maxCount: 1 },{ name: 'image_9_1', maxCount: 1 },{ name: 'image_9_2', maxCount: 1 },{ name: 'image_9_3', maxCount: 1 },{ name: 'image_9_4', maxCount: 1 }
 ]), async (req, res) => {
     try {
-        let uniqueId; //퀴즈 코드
+        const uniqueId = await service.isUniqueId();; //퀴즈 코드
         const name = req.body.name; //작성자 이름
         const quizList = JSON.parse(req.body.quizList);
-
-        //unique ID 생성
-        uniqueId = await service.isUniqueId();
 
         // quizList테이블에 insert
         await service.insertQuizList(name, uniqueId);
