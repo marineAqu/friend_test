@@ -43,8 +43,8 @@ const MakePage = () => {
     /* param으로 name 받아놓음 */
     const { name } = useParams();
 
-    /* post로 받은 값 저장함, 원래 null이고 예시로 바꿈 */
-    const [quizId, setQuizId] = useState(1234);
+    // /* post로 받은 값 저장함, 원래 null이고 예시로 바꿈 */
+    // const [quizId, setQuizId] = useState(1234);
 
 
 
@@ -90,20 +90,6 @@ const MakePage = () => {
             const updatedQuizList = [...quizList];
             updatedQuizList[currentPage].images[index] = file;
             setQuizList(updatedQuizList);
-        // if(file){
-        //     const reader = new FileReader();
-        //
-        //     reader.onload = () => {
-        //         const imageUrl = reader.result;
-        //         const updatedQuizList = [...quizList];
-        //         updatedQuizList[currentPage].images[index] = {
-        //             file: file,
-        //             imageUrl: imageUrl
-        //         };
-        //         setQuizList(updatedQuizList);
-        //     };
-        //     reader.readAsDataURL(file);
-        // }
 
     };
 
@@ -111,7 +97,10 @@ const MakePage = () => {
         const updatedQuizList = [...quizList];
         updatedQuizList[page].correctNo = correctNo;
         setQuizList(updatedQuizList);
+        setCorrectAnswerSelected(true);
     };
+
+    const [correctAnswerSelected, setCorrectAnswerSelected] = useState(false);
 
     const navigate = useNavigate();
 
@@ -135,30 +124,35 @@ const MakePage = () => {
     }
 
     const handleNextPage = () => {
-        if (page < 9) {
-            // 다음페이지로
-            setPage(page + 1);
-            // 페이지 넘어가면 그 페이지의 questionNo 페이지 값으로 자동 업데이트
-            const updatedQuizList = [...quizList];
-            updatedQuizList[page].questionNo = page + 1;
-            setQuizList(updatedQuizList);
+        if (correctAnswerSelected || page === 9) {
+            if (page < 9) {
+                // 다음페이지로
+                setPage(page + 1);
+                // 페이지 넘어가면 그 페이지의 questionNo 페이지 값으로 자동 업데이트
+                const updatedQuizList = [...quizList];
+                updatedQuizList[page].questionNo = page + 1;
+                setQuizList(updatedQuizList);
 
-             // 선택된 라디오 버튼의 상태 초기화
-            const radioButtons = document.getElementsByName('correctNo');
-            radioButtons.forEach(button => button.checked = false);
+                // 선택된 라디오 버튼의 상태 초기화
+                const radioButtons = document.getElementsByName('correctNo');
+                radioButtons.forEach(button => button.checked = false);
+                setCorrectAnswerSelected(false);
 
-            
+
+            } else {
+                // no 설정을 해주지 않아서 1로 삽입되었음
+                const updatedQuizList = [...quizList];
+                updatedQuizList[page].questionNo = page + 1;
+                setQuizList(updatedQuizList);
+                handleSubmit();
+                console.log(quizList);
+                //TODO: localstorage에 이미 퀴즈를 만들었으므로 저장하는 코드 주석 풀기 (현재 테스트를 위해 임시 주석처리)
+                /*
+                localStorage.setItem('userId', myCode);
+                */
+            }
         } else {
-            // no 설정을 해주지 않아서 1로 삽입되었음
-            const updatedQuizList = [...quizList];
-            updatedQuizList[page].questionNo = page + 1;
-            setQuizList(updatedQuizList);
-            const myCode= handleSubmit();
-            console.log(quizList);
-            //TODO: localstorage에 이미 퀴즈를 만들었으므로 저장하는 코드 주석 풀기 (현재 테스트를 위해 임시 주석처리)
-            /*
-            localStorage.setItem('userId', myCode);
-            */
+            alert("정답을 선택해주세요.");
         }
     };
 
@@ -167,13 +161,6 @@ const MakePage = () => {
             const formData = new FormData();
             formData.append('name', name);
             formData.append('quizList', JSON.stringify(quizList));
-            // formData.append(
-            //     'data',
-            //     JSON.stringify({
-            //         name: name,
-            //         quizList: quizList,
-            //     }),
-            // );
 
             // 파일 데이터를 FormData에 추가
             quizList.forEach((quiz, index) => {

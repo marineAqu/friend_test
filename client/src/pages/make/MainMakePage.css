@@ -1,19 +1,4 @@
 
-
-.outerLayout{
-    width: 100vw;
-    height: calc(var(--vh,1vh)*100);
-    margin: 0 0 0 0;
-    font-family: Arial, Helvetica, sans-serif;
-    display: flex;
-    text-align: center;
-    justify-content: center;
-    align-items: flex-start;
-    
-
-}
-
-
 .innerLine{
   display: block;
   margin-top: -30%;
