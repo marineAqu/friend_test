@@ -36,8 +36,6 @@ const TestPage = () => {
         } else {
             console.log(updateAnswerList);    //체크용
             await handleSubmit(updateAnswerList);
-            // console.log(answerNo)
-            // navigate(`/score/${answerNo}`);
         }
     }
 
@@ -70,8 +68,6 @@ const TestPage = () => {
                 const data = await response.json();
                 const getQuizList = formatter(data.quizList);
                 setQuizList(getQuizList);
-                console.log(getQuizList);
-                console.log(quizList);
 
             } catch (error) {
                 console.error('Error:', error);
