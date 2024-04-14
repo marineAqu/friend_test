@@ -164,7 +164,7 @@ function getAnswerList(answerNo){
     });
 }
 
-function countScore(quizId){
+function countScore(quizId, answerList){
     return new Promise((resolve, reject) => {
         let count = 0;
 
@@ -176,7 +176,7 @@ function countScore(quizId){
                 }
                 else{
                     for(let i=0; i<10; i++){
-                        if(result[i]['correct_no'] === req.body.answerList[i]) count++;
+                        if(result[i]['correct_no'] === answerList[i]) count++;
                     }
 
                     console.log("count: "+count);
