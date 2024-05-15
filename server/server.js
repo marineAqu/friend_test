@@ -112,9 +112,7 @@ app.post('/saveAnswer', async (req, res) => {
         console.log("req.body.answerList: "+req.body.answerList);
 
         const score = await service.countScore(req.body.quizId, req.body.answerList);
-
         await service.insertQuizAnswer(req.body.quizId, req.body.answerName, req.body.answerList, score);
-
         const answerNo = await service.getnoFromQuizAnswer(req.body.quizId, req.body.answerName);
 
         res.json({answerNo});
