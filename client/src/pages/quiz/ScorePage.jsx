@@ -72,7 +72,7 @@ const ScorePage = () => {
                 </div>
                 <DefaultButton text="채점 결과 확인하기" variant='normal' onClick={handleShowDetail} />
                 <h2>결과 공유하기</h2>
-                <ShareLinkButton link={`http://localhost:3000/friend_test/score/${answerNo}`} />
+                <ShareLinkButton link={`http://34.47.81.121:3002/friend_test/score/${answerNo}`} />
                 <DefaultButton text="테스트 다시풀기" variant='blue' onClick={handleTestAgain} />
                 <DefaultButton text="새로운 능력고사 만들러 가기" variant='red' onClick={handlePush} />
 

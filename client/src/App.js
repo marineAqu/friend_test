@@ -1,6 +1,6 @@
 //App.js
 
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import './App.css';
 import MainMakePage from "./pages/make/MainMakePage.jsx";
 import MakePage from "./pages/make/MakePage.jsx";
@@ -9,31 +9,27 @@ import MainTestPage from "./pages/quiz/MainTestPage.jsx";
 import ScoreDetailPage from "./pages/quiz/ScoreDetailPage.jsx";
 import ScorePage from "./pages/quiz/ScorePage.jsx";
 import TestPage from "./pages/quiz/TestPage.jsx";
-import TempTestPage from "./pages/make/TempTestPage.jsx";
 
 
 
 
 
 function App() {
-    const isMaker = false;  // 나중에 만든 사람이냐 아니냐로 검증
 
     return (
-        <BrowserRouter basename="/friend_test">
+        <BrowserRouter>
             <Routes>
-                <Route path="/main/make" element={<MainMakePage/>}></Route>
-                <Route path="/make/:name" element={<MakePage/>}></Route>
-                <Route path="/share/:quizId" element={<SharePage/>}></Route>
+                <Route path="/friend_test/main/make" element={<MainMakePage/>}></Route>
+                <Route path="/friend_test/make/:name" element={<MakePage/>}></Route>
+                <Route path="/friend_test/share/:quizId" element={<SharePage/>}></Route>
 
-                <Route path="/main/test/:quizId" element={<MainTestPage/>}></Route>
-                <Route path="/test/:quizId" element={<TestPage/>}></Route>
-                <Route path="/score/:answerNo" element={<ScorePage/>}></Route>
+                <Route path="/friend_test/main/test/:quizId" element={<MainTestPage/>}></Route>
+                <Route path="/friend_test/test/:quizId" element={<TestPage/>}></Route>
+                <Route path="/friend_test/score/:answerNo" element={<ScorePage/>}></Route>
 
-                <Route path="/score-detail/:answerNo" element={<ScoreDetailPage/>}></Route>
-                <Route path="/*" element={<MainMakePage/>}></Route>
+                <Route path="/friend_test/score-detail/:answerNo" element={<ScoreDetailPage/>}></Route>
+                <Route path="/*" element={<Navigate to="/friend_test/main/make" replace />} />
 
-
-                <Route path="/temp/test" element={<TempTestPage/>}></Route>
             </Routes>
         </BrowserRouter>
     )
