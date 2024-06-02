@@ -238,7 +238,7 @@ const MakePage = () => {
                         {quizList[page].images.map((image, index) => (
                             <div key={index}>
                                 <ImagePreview imageUrl={image ? URL.createObjectURL(image) : null} />
-                                <label htmlFor={`file-${index}`}><div class="btn-upload">이미지 업로드</div></label>
+                                <label htmlFor={`file-${index}`}><div className="btn-upload">이미지 업로드</div></label>
                                 <input
                                     type="file"
                                     id={`file-${index}`}
