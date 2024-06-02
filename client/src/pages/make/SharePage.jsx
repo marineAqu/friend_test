@@ -12,21 +12,20 @@ import './SharePage.css';
 
 //TODO: 닉네임 get하는 api
 const SharePage = () => {
+    /* param으로 name 받아놓음 */
+    const {quizId} = useParams();
     const [nickname, setNickname] = useState("test");
-    const [sharelink, setSharelink] = useState("http:/3000/shareplease");
+    const [sharelink, setSharelink] = useState(`http://34.47.81.121:3002/friend_test/share/${quizId}`);
 
     const navigate = useNavigate();
 
     const handlePush = () => {
-        navigate("/main/make");
+        navigate("/friend_test/main/make");
     }
 
     const handleTestAgain = () => {
-        navigate("/main/test/" + quizId);
+        navigate("/friend_test/main/test/" + quizId);
     }
-
-    /* param으로 name 받아놓음 */
-    const {quizId} = useParams();
 
     useEffect(() => {
         if (quizId !== undefined) {
@@ -46,7 +45,7 @@ const SharePage = () => {
 
                     const data = await response.json();
                     setNickname(data.nickname);
-                    setSharelink(`http://localhost:3000/friend_test/share/${quizId}`)
+                    setSharelink(`http://34.47.81.121:3002/friend_test/share/${quizId}`)
 
                 } catch (error) {
                     console.error('Error:', error);

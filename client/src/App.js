@@ -28,8 +28,8 @@ function App() {
                 <Route path="/friend_test/score/:answerNo" element={<ScorePage/>}></Route>
 
                 <Route path="/friend_test/score-detail/:answerNo" element={<ScoreDetailPage/>}></Route>
-                <Route path="/*" element={<Navigate to="/friend_test/main/make" replace />} />
-
+                <Route path="/friend_test/" element={<Navigate to="/friend_test/main/make" replace />} />
+                <Route path="/" element={<Navigate to="/friend_test/main/make" replace />} />
             </Routes>
         </BrowserRouter>
     )

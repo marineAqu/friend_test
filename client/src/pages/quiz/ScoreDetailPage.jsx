@@ -47,7 +47,7 @@ const ScoreDetailPage = () => {
         if(page < 9){
             setPage(page+1);
         } else {
-            navigate(`/score/${answerNo}`);
+            navigate(`/friend_test/score/${answerNo}`);
         }
     }
 

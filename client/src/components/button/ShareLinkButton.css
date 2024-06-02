@@ -7,13 +7,20 @@
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 10px;
-    border-radius: 0;
     text-align: center;
     border-radius: 10px;
     font-size: 18px;
     font-weight: 100;
     background-color: white;
     line-height: 48px;
+    overflow: auto;
+
+    /* 파이어폭스용 스크롤바 숨기기 */
+    scrollbar-width: none;
+    /* 크롬, 사파리, 오페라용 스크롤바 숨기기 */
+    &::-webkit-scrollbar {
+        display: none;
+    }
   }
   
   .copy-link {
@@ -24,7 +31,6 @@
     margin-right: auto;
     border-radius: 10px;
     font-size: 18px;
-    font-weight: 100;
     color: azure;
     font-weight: 400;
     border: none;

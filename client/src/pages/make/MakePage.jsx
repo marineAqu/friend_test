@@ -106,7 +106,7 @@ const MakePage = () => {
 
     // quizId 기본값 손보기
     const handlePush = (getQuizId) => {
-        navigate("/share/" + getQuizId);
+        navigate("/friend_test/share/" + getQuizId);
     }
 
     const makeRandomQuiz = () => {

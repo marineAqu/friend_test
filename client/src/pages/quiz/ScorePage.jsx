@@ -46,15 +46,15 @@ const ScorePage = () => {
     const navigate = useNavigate();
 
     const handleShowDetail = () => {
-        navigate(`/score-detail/${answerNo}`);
+        navigate(`/friend_test/score-detail/${answerNo}`);
     }
 
     const handlePush = () => {
-        navigate("/main/make");
+        navigate("/friend_test/main/make");
     }
 
     const handleTestAgain = () => {
-        navigate("/main/test/" + quizId);
+        navigate("/friend_test/main/test/" + quizId);
     }
 
 
