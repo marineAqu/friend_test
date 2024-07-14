@@ -99,7 +99,7 @@ const TestPage = () => {
             console.log(data);
             console.log(answerNo);
 
-            navigate(`/friend_test/score/${answerNo}`);
+            navigate(`/score/${answerNo}`);
 
         } catch (error) {
             console.error('Error:', error);

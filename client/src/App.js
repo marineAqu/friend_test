@@ -19,17 +19,16 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/friend_test/main/make" element={<MainMakePage/>}></Route>
-                <Route path="/friend_test/make/:name" element={<MakePage/>}></Route>
-                <Route path="/friend_test/share/:quizId" element={<SharePage/>}></Route>
+                <Route path="/main/make" element={<MainMakePage/>}></Route>
+                <Route path="/make/:name" element={<MakePage/>}></Route>
+                <Route path="/share/:quizId" element={<SharePage/>}></Route>
 
-                <Route path="/friend_test/main/test/:quizId" element={<MainTestPage/>}></Route>
-                <Route path="/friend_test/test/:quizId" element={<TestPage/>}></Route>
-                <Route path="/friend_test/score/:answerNo" element={<ScorePage/>}></Route>
+                <Route path="/main/test/:quizId" element={<MainTestPage/>}></Route>
+                <Route path="/test/:quizId" element={<TestPage/>}></Route>
+                <Route path="/score/:answerNo" element={<ScorePage/>}></Route>
 
-                <Route path="/friend_test/score-detail/:answerNo" element={<ScoreDetailPage/>}></Route>
-                <Route path="/friend_test/" element={<Navigate to="/friend_test/main/make" replace />} />
-                <Route path="/" element={<Navigate to="/friend_test/main/make" replace />} />
+                <Route path="/score-detail/:answerNo" element={<ScoreDetailPage/>}></Route>
+                <Route path="/" element={<Navigate to="/main/make" replace />} />
             </Routes>
         </BrowserRouter>
     )

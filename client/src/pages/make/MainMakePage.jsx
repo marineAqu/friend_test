@@ -25,7 +25,7 @@ const MainMakePage = () =>{
     
     //만약 이미 퀴즈를 만들지 않았다면
     if (!localStorage.getItem('userId')) {
-      navigate(`/friend_test/make/${name}`);
+      navigate(`/make/${name}`);
     }
     //이미 이전에 퀴즈를 만들었다면
     else{

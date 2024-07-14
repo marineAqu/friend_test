@@ -46,15 +46,15 @@ const ScorePage = () => {
     const navigate = useNavigate();
 
     const handleShowDetail = () => {
-        navigate(`/friend_test/score-detail/${answerNo}`);
+        navigate(`/score-detail/${answerNo}`);
     }
 
     const handlePush = () => {
-        navigate("/friend_test/main/make");
+        navigate("/main/make");
     }
 
     const handleTestAgain = () => {
-        navigate("/friend_test/main/test/" + quizId);
+        navigate("/main/test/" + quizId);
     }
 
 
@@ -72,7 +72,7 @@ const ScorePage = () => {
                 </div>
                 <DefaultButton text="채점 결과 확인하기" variant='normal' onClick={handleShowDetail} />
                 <h2>결과 공유하기</h2>
-                <ShareLinkButton link={`http://34.47.81.121:3002/friend_test/score/${answerNo}`} />
+                <ShareLinkButton link={`http://friend-test.kro.kr/score/${answerNo}`} />
                 <DefaultButton text="테스트 다시풀기" variant='blue' onClick={handleTestAgain} />
                 <DefaultButton text="새로운 능력고사 만들러 가기" variant='red' onClick={handlePush} />
 

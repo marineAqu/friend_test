@@ -15,16 +15,16 @@ const SharePage = () => {
     /* param으로 name 받아놓음 */
     const {quizId} = useParams();
     const [nickname, setNickname] = useState("test");
-    const [sharelink, setSharelink] = useState(`http://34.47.81.121:3002/friend_test/share/${quizId}`);
+    const [sharelink, setSharelink] = useState(`http://friend-test.kro.kr/share/${quizId}`);
 
     const navigate = useNavigate();
 
     const handlePush = () => {
-        navigate("/friend_test/main/make");
+        navigate("/main/make");
     }
 
     const handleTestAgain = () => {
-        navigate("/friend_test/main/test/" + quizId);
+        navigate("/main/test/" + quizId);
     }
 
     useEffect(() => {
@@ -45,7 +45,7 @@ const SharePage = () => {
 
                     const data = await response.json();
                     setNickname(data.nickname);
-                    setSharelink(`http://34.47.81.121:3002/friend_test/share/${quizId}`)
+                    setSharelink(`http://friend-test.kro.kr/share/${quizId}`)
 
                 } catch (error) {
                     console.error('Error:', error);

@@ -22,7 +22,7 @@ const MainTestPage = () => {
     const handleSubmit = () => {
         if (username.trim() !== "") {
             const a = document.getElementById('username').value;
-            navigate(`/friend_test/test/${quizId}?name=` + a);
+            navigate(`/test/${quizId}?name=` + a);
         } else {
             alert("제출자 이름을 입력해주세요");
         }
