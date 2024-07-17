@@ -19,7 +19,7 @@ const columns = [
 ];
 
 function createData(name, score, no) {
-    const url = "http://localhost:3000/friend_test/score-detail/" + no;
+    const url = "http://friend-test.kro.kr/score-detail/" + no;
     return { name, score, url};
 }
 
