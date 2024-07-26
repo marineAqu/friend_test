@@ -119,7 +119,8 @@ const MakePage = () => {
         newQuizList[page].answers[4] = randomAnswer[nowRandomNum][4];
         setQuizList(newQuizList);
 
-        if(nowRandomNum !== 2) nowRandomNum++;
+        console.log("randomAnswer.length: "+randomAnswer.length);
+        if(nowRandomNum !== (randomAnswer.length - 1)) nowRandomNum++;
         else nowRandomNum = 0;
     }
 
@@ -186,7 +187,6 @@ const MakePage = () => {
             console.error('Error:', error);
         }
     };
-
 
 
 
